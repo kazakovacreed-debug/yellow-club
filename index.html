@@ -69,6 +69,10 @@ nav.menu a:hover,nav.menu a.on{background:#fff;color:var(--ink)}
 .rbtn span{display:block;font-size:12.5px;color:var(--mute);margin-top:6px;line-height:1.35}
 .rbtn[aria-pressed=true]{border-color:var(--red);box-shadow:0 14px 34px -14px rgba(229,72,90,.55)}
 .rbtn[aria-pressed=true]::after{content:"Это я";position:absolute;bottom:-11px;left:14px;background:var(--grad);color:#fff;font:700 11px "Int";padding:3px 10px;border-radius:999px}
+.capban{display:flex;align-items:center;gap:14px;margin-top:26px;background:var(--dark);color:#fff;text-decoration:none;border-radius:22px;padding:16px 22px;max-width:760px}
+.capban span:first-child{font-size:28px}
+.capban b{color:var(--yellow)}
+.capban i{margin-left:auto;font-style:normal;font-weight:900;font-size:22px;color:var(--yellow)}
 .allbtn{margin-top:16px;border:0;background:none;font:600 14px "Int";color:var(--ink2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
 
 /* sections */
@@ -303,6 +307,7 @@ footer .dark p{margin:8px 0 0;color:#d9d3e2}
     <span class="eyebrow">💛 ВСЁ О КЛУБЕ В ОДНОМ МЕСТЕ</span>
     <h1><span class="gt">кто есть кто<br>в жёлтом клубе</span></h1>
     <p class="sub"><b>Роли, команда клуба, путь участника, чаты, созвоны и ответы на частые вопросы.</b> Выбери, кто ты в клубе — и платформа покажет твой маршрут.</p>
+    <a href="kapitan.html" class="capban"><span>🧢</span><span><b>Ты капитан?</b> Открой шпаргалку капитана — только самое нужное и готовые тексты</span><i>→</i></a>
     <div class="who">
       <h3>Кто ты в клубе?</h3>
       <div class="roles" id="roleBtns"></div>
