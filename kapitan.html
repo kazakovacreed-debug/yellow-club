@@ -117,7 +117,25 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
 .muted{color:var(--mute);font-size:13.5px}
 .yb{background:var(--yellow)!important;color:var(--ink)!important;text-decoration:none}
 @media(max-width:820px){nav.big{grid-template-columns:1fr 1fr}.cols,#renew .cols,.contacts,.days{grid-template-columns:1fr}}
-.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;transition:transform .25s,opacity .25s;opacity:0;pointer-events:none}
+
+.org{display:flex;flex-direction:column;align-items:center}
+.lvl{width:100%;display:flex;justify-content:center}
+.vl{width:3px;height:22px;background:linear-gradient(#F7931E,#7B2A9E)}
+.node{display:flex;flex-direction:column;gap:4px;background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--sh);text-decoration:none;color:var(--ink);width:100%;max-width:560px}
+.node small{font:700 11px "Int";letter-spacing:.1em;text-transform:uppercase;color:var(--purple)}
+.node b{font:800 17px/1.2 "Unb"}
+.node span{font-size:14.5px;color:var(--ink2)}
+.node i{font-style:normal;font-weight:700;color:var(--red);font-size:14px;margin-top:2px}
+.node.top{background:#FFD21F}
+.node.top small{color:#5b1e85}
+.node.me{background:var(--dark);color:#fff}
+.node.me small,.node.me i{color:var(--yellow)}
+.node.me span{color:#ddd6e6}
+.node.help{border:2px solid #E5485A}
+.team{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%}
+.team .node{max-width:none}
+@media(max-width:820px){.team{grid-template-columns:1fr}}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;transition:transform .25s,opacity .25s;opacity:0;pointer-events:none;z-index:60}
 .toast.show{transform:translate(-50%,0);opacity:1}
 </style>
 </head>
@@ -131,7 +149,7 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
     <a href="#day"><span>☀️</span><b>Мой день</b><small>чек-лист капитана</small></a>
     <a href="#new"><span>🚀</span><b>Новая команда</b><small>14 готовых постов</small></a>
     <a href="#sos"><span>🆘</span><b>Трудная ситуация</b><small>что ответить</small></a>
-    <a href="#who"><span>📞</span><b>Кому писать</b><small>и главные ссылки</small></a>
+    <a href="#who"><span>📞</span><b>Команда клуба</b><small>кто за что и ссылки</small></a>
   </nav>
 </header>
 
@@ -156,7 +174,7 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
       <button class="link reset">Сбросить на новую неделю</button>
     </div>
     <div class="card check" data-key="m"><h3 class="g2">Каждый месяц</h3>
-      <label><input type="checkbox"><span><b>⏰ Продления</b>Напиши лично всем, у кого подписка заканчивается через 10 дней</span></label>
+      <label><input type="checkbox"><span><b>🤝 Чтобы никто не слился</b>Напиши лично всем, у кого через 10 дней заканчивается период в клубе</span></label>
       <label><input type="checkbox"><span><b>📈 Бот результатов</b>Напомни заполнить «Точка А → Точка Б»</span></label>
       <label><input type="checkbox"><span><b>🏆 Кейсы</b>Оформи результаты участников</span></label>
       <button class="link reset">Сбросить на новый месяц</button>
@@ -180,32 +198,44 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
 </section>
 
 <section id="renew">
-  <span class="pill">ПРОДЛЕНИЯ</span>
+  <span class="pill">ЧТОБЫ НИКТО НЕ СЛИЛСЯ</span>
   <h2><span class="gt">не даём слиться с цели</span></h2>
   <div class="cols">
-    <div class="card"><h3 class="g2">За 10 дней до конца подписки</h3>
-      <ol class="nums"><li><b>Открой разговор, а не продавай.</b> Спроси, как дела с блогом и с целью.</li><li><b>Найди, что мешает.</b> Время, результат, деньги, страх.</li><li><b>Свяжи с тем, что даёт клуб.</b> Не получается регулярно → команда и ритм; не летят ролики → ОС и разборы.</li><li><b>Дай ссылку на продление</b> — она в закрепе «Важная информация». Заморозка лучше ухода.</li></ol>
+    <div class="card"><h3 class="g2">За 10 дней до конца периода в клубе</h3>
+      <ol class="nums"><li><b>Открой разговор, а не продавай.</b> Спроси, как дела с блогом и с целью.</li><li><b>Найди, что мешает.</b> Время, результат, деньги, страх.</li><li><b>Свяжи с тем, что даёт клуб.</b> Не получается регулярно → команда и ритм; не летят ролики → ОС и разборы.</li><li><b>Дай ссылку, чтобы остаться</b> — она в закрепе «Важная информация». Пауза (заморозка) лучше, чем слиться.</li></ol><p style="margin:12px 0 0;font-size:15px;color:var(--ink2)">🤝 Тебе помогают менеджеры <b>Сандра и Женя</b>: они тоже пишут людям, у кого заканчивается период, и помогают не слиться. Если человек сомневается — скажи Насте, она подключит их.</p>
     </div>
     <div class="card"><h3 class="g2">Первое сообщение</h3><pre id="r1">[Имя], привет 💛 Как ты сейчас с блогом? Помню, ты приходил(а) с целью [цель] — получилось приблизиться? Расскажи, что уже вышло и что пока тормозит — подумаем вместе, как дойти дальше 🚀</pre><button class="btn" data-copy="r1">Скопировать</button></div>
   </div>
 </section>
 
 <section id="who">
-  <span class="pill">КОМУ ПИСАТЬ</span>
-  <h2><span class="gt">кто поможет</span></h2>
-  <div class="contacts">
+  <span class="pill">КОМАНДА КЛУБА</span>
+  <h2><span class="gt">кто за что отвечает</span></h2>
+  <p class="lead">Только те, с кем пересекается капитан. Главный контакт по капитанам и командам — Настя.</p>
+  <div class="org">
+    <div class="lvl"><div class="node top"><small>Собственники клуба</small><b>Айрат и Евгений (Женя)</b><span>Айрат — эксперт, воскресные эфиры-разборы. Евгений — продюсер клуба. Вопросы к ним — в капитанском чате, ветка «Вопросы Айрату и Евгению важно».</span></div></div>
+    <div class="vl"></div>
+    <div class="lvl"><div class="node top"><small>Исполнительный директор</small><b>Ирина Хакимова</b><span>Руководит всеми отделами клуба.</span></div></div>
+    <div class="vl"></div>
+    <div class="lvl"><a class="node me" href="https://t.me/kazakova_tg" target="_blank" rel="noopener"><small>Развитие клуба · твой главный контакт</small><b>Настя Казакова</b><span>Капитаны и команды, помощь, чтобы люди не сливались, офлайн, этот сайт.</span><i>@kazakova_tg →</i></a></div>
+    <div class="vl"></div>
+    <div class="team">
+      <a class="node" href="https://t.me/Tatteanna" target="_blank" rel="noopener"><small>Методолог клуба</small><b>Татьяна Алексеева</b><span>Обучение капитанов, эксперты, группы лидеров 2.0.</span><i>@Tatteanna →</i></a>
+      <div class="node"><small>Помощник Татьяны</small><b>Наталья Йойна</b><span>Помогает с обучением капитанов и экспертами.</span></div>
+      <a class="node" href="https://docs.google.com/forms/d/e/1FAIpQLSdSMS2d45QE4kXGk0gus8FkBx9VF2B5t-elXcoEXVXT4n3emg/viewform" target="_blank" rel="noopener"><small>Куратор психологов</small><b>Ольга Иванова</b><span>«Точка опоры»: бесплатный психолог для участника раз в месяц.</span><i>анкета →</i></a>
+      <div class="node help"><small>Помогают твоим людям не слиться</small><b>Менеджеры Сандра и Женя</b><span>Пишут тем, у кого заканчивается период в клубе: помогают остаться, подобрать срок или поставить паузу.</span></div>
+    </div>
+  </div>
+  <div class="contacts" style="margin-top:18px">
     <a href="https://t.me/zabota_airat" target="_blank" rel="noopener"><b>Служба заботы</b><span>Доступы, оплата, перевод в другую команду</span><i>@zabota_airat</i></a>
-    <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener"><b>Настя</b><span>Капитаны, продления, офлайн, этот сайт</span><i>@kazakova_tg</i></a>
-    <a href="https://t.me/Tatteanna" target="_blank" rel="noopener"><b>Татьяна</b><span>Обучение капитанов, эксперты, группы лидеров 2.0</span><i>@Tatteanna</i></a>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSMS2d45QE4kXGk0gus8FkBx9VF2B5t-elXcoEXVXT4n3emg/viewform" target="_blank" rel="noopener"><b>«Точка опоры»</b><span>Бесплатный психолог для участника раз в месяц</span><i>анкета →</i></a>
     <div class="ct"><b>Твой наставник</b><span>Сложная ситуация в команде, сам устал, не знаешь, как быть</span><i>в чате наставника</i></div>
-    <div class="ct"><b>Капитанский чат</b><span>Вопросы Айрату и Евгению — в ветке «Вопросы Айрату и Евгению важно»</span><i>«Капитаны Жёлтого клуба»</i></div>
+    <div class="ct"><b>Капитанский чат</b><span>Новости клуба и вопросы — ветка «Важное»</span><i>«Капитаны Жёлтого клуба»</i></div>
   </div>
   <h3 style="margin:30px 0 12px">Главные ссылки капитана</h3>
   <div class="links">
     <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">🎓 Школа капитанов</a>
     <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener">👥 Кто пришёл и выбыл</a>
-    <a href="https://t.me/c/3751085840/1785/24215" target="_blank" rel="noopener">⏰ Памятка по продлениям</a>
+    <a href="https://t.me/c/3751085840/1785/24215" target="_blank" rel="noopener">🤝 Памятка: чтобы человек не слился</a>
     <a href="https://t.me/c/3751085840/1785/8750" target="_blank" rel="noopener">🏆 Как оформить кейс</a>
     <a href="https://kazakovacreed-debug.github.io/razbory/" target="_blank" rel="noopener">🔍 Разбор страницы командой</a>
     <a href="zoom.html">📲 Как забронировать Zoom</a>
@@ -301,7 +331,7 @@ const DAYS = [
 
 const SIT = [
  ["🤐", "Человек молчит в чате", "Не пиши в общий чат «где все?». Напиши лично, по имени, и дай один маленький шаг — 30 секунд.", `[Имя], привет 💛 Ты где потерялся(ась)? 😅 Давай с маленького шага — запиши в чат кружочек на 30 секунд: как тебя зовут и что хочешь от блога. Больше ничего не нужно, я рядом!`],
- ["🚪", "Хочет уйти / не продлевает", "Напиши лично сегодня. Не начинай с цены: спроси про цель, найди, что мешает, предложи заморозку вместо ухода.", `[Имя], спасибо, что честно написал(а) 💛 Можно один вопрос: сама цель по блогу — [цель] — ещё актуальна, или сейчас просто сложный период? Если дело во времени или силах, можно не уходить совсем, а поставить подписку на заморозку и вернуться, когда будет ресурс. Давай подумаем вместе?`],
+ ["🚪", "Хочет уйти / может слиться", "Напиши лично сегодня. Не начинай с цены: спроси про цель, найди, что мешает, предложи паузу вместо того, чтобы слиться. Подключи менеджеров Сандру и Женю через Настю.", `[Имя], спасибо, что честно написал(а) 💛 Можно один вопрос: сама цель по блогу — [цель] — ещё актуальна, или сейчас просто сложный период? Если дело во времени или силах, можно не уходить совсем, а поставить подписку на заморозку и вернуться, когда будет ресурс. Давай подумаем вместе?`],
  ["😩", "«Не получается», «нет сил»", "Поддержи и уменьши шаг до одного действия на неделю. Если «знаю, но не делаю» — предложи «Точку опоры».", `[Имя], это нормально — у всех бывают такие периоды 💛 Давай уменьшим шаг: одна маленькая задача на неделю — [действие]. Если чувствуешь, что знаешь, что делать, но что-то внутри тормозит, — в клубе есть «Точка опоры»: бесплатная встреча с психологом раз в месяц, только про блог. Анкета: https://docs.google.com/forms/d/e/1FAIpQLSdSMS2d45QE4kXGk0gus8FkBx9VF2B5t-elXcoEXVXT4n3emg/viewform`],
  ["🔁", "Хочет в другую команду", "Спокойно и без обиды: это нормально. Галерея капитанов → служба заботы.", `[Имя], конечно, это нормально 💛 Важно, чтобы тебе было комфортно расти. Посмотри капитанов в галерее — https://app.airat-reels.ru/club/captains — и напиши в службу заботы @zabota_airat, тебя переведут. Удачи и классных результатов! 🚀`],
  ["🎯", "Просит платный разбор у Айрата", "Отдельных платных консультаций нет. Покажи два пути.", `Отдельных платных консультаций у Айрата нет, но на разбор попасть можно! 💛 Есть два пути: 1) регулярно снимать, применять рекомендации, выполнить условия и передать мне запрос — я поставлю тебя в очередь; 2) расти в клубе до лидера и капитана — опытных капитанов Айрат разбирает еженедельно. Главное — не останавливаться!`],
@@ -312,7 +342,7 @@ const SIT = [
 
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1800)}
+window.toast = function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1800)}
 async function copyText(t, el){try{await navigator.clipboard.writeText(t);toast("Скопировано 💛")}catch(e){const r=document.createRange();r.selectNodeContents(el);getSelection().removeAllRanges();getSelection().addRange(r);toast("Выделила — нажми Копировать")}}
 
 $("#days").innerHTML = DAYS.map(([t, p], i) => `<details class="day"><summary><i>${i+1}</i><b>${esc(t)}</b></summary><pre id="d${i}">${esc(p)}</pre><button class="btn" data-copy="d${i}">Скопировать пост</button></details>`).join("");
