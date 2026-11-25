@@ -90,6 +90,7 @@ h2{line-height:1.15}
 .blk p{margin:0;font-size:14px;line-height:1.5}
 .bh{line-height:1.3}
 @media (max-width:520px){.tab{font-size:12px;padding:9px 12px}.st .v{font-size:16px}}
+.ava img.hd{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 </style>
 </head>
 <body>
@@ -203,7 +204,7 @@ const zone=p=>p==null?['','—']:p>=51?['g','зелёная']:p>=40?['y','жёл
 const esc=s=>String(s==null?'—':s);
 function card(c){
   const [n,t,ig]=c; const d=D[n]||{}; const [zc,zt]=zone(d.renp);
-  const si=SP.indexOf(d.tg); const ava=si<0?'':`<i class="sp" style="background-position:${(si%8)/7*100}% ${Math.floor(si/8)/5*100}%"></i>`;
+  const si=SP.indexOf(d.tg); const ava=si<0?'':`<i class="sp" style="background-position:${(si%8)/7*100}% ${Math.floor(si/8)/5*100}%"></i>`+(d.tg?`<img class="hd" src="https://t.me/i/userpic/320/${d.tg}.jpg" alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth<50)this.remove()">`:'');
   const igl=ig?ig.split('|').map(x=>`<a href="https://www.instagram.com/${x}/">@${x}</a>`).join(' + '):'Instagram уточняется';
   const notes=(d.notes||[]).length?`<div class="nt">⚠️ ${d.notes.join('; ')}</div>`:'';
   return `<article class="card">
