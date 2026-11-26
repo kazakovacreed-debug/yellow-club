@@ -205,6 +205,63 @@ ol.newsl li b{color:var(--ink)}
 .linksbtn b{display:block;font:800 17px/1.2 "Unb";color:var(--yellow)}
 .linksbtn small{display:block;color:#ddd6e6;font-size:13.5px;margin-top:3px}
 .linksbtn i{margin-left:auto;font-style:normal;font-size:24px;color:var(--yellow)}
+
+/* --- верхняя панель и мобильная версия --- */
+.back{position:static;display:inline-block;box-shadow:none}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:none;align-items:center;gap:12px;padding:10px 14px;background:rgba(248,239,234,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,10,51,.06)}
+body.inner .topbar{display:flex}
+.topbar b{font:800 15px/1.2 "Unb";white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.secnav{margin:34px 0 0}
+.secnav .grp{margin:0 0 10px}
+.secnav div{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.secnav div::-webkit-scrollbar{display:none}
+.secnav a{flex:0 0 auto;background:#fff;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;padding:10px 14px;border-radius:999px;box-shadow:var(--sh)}
+@media(max-width:640px){
+  .w{padding:0 14px}
+  section.view{padding:72px 0 40px}
+  section>h2{font-size:30px;margin:10px 0 6px}
+  section>p.lead{font-size:15.5px;margin:0 0 16px}
+  .pill{font-size:11px;padding:7px 14px}
+  .back{font-size:14px;padding:9px 14px}
+  .card,.dark{padding:18px;border-radius:22px}
+  /* карточки-ссылки списком, как в настройках телефона */
+  .contacts{display:block;background:#fff;border-radius:20px;box-shadow:var(--sh);overflow:hidden}
+  .contacts a,.contacts .ct{position:relative;border-radius:0;box-shadow:none;padding:14px 40px 14px 16px;border-top:1px solid #f1e8e4;gap:2px}
+  .contacts>:first-child{border-top:0}
+  .contacts b{font-size:15px;line-height:1.25}
+  .contacts span{font-size:13.5px;line-height:1.4}
+  .contacts i{font-size:13px}
+  .contacts a:after{content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);font:700 24px/1 "Int";color:#c9bfc9}
+  .links{display:block;background:#fff;border-radius:20px;box-shadow:var(--sh);overflow:hidden}
+  .links a{display:block;position:relative;border-radius:0;box-shadow:none;padding:13px 40px 13px 16px;border-top:1px solid #f1e8e4;font-size:15px}
+  .links a:first-child{border-top:0}
+  .links a:after{content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);font:700 24px/1 "Int";color:#c9bfc9}
+  .links a:hover{background:#fff;color:var(--ink)}
+  .grp{margin:20px 0 8px 4px}
+  /* кто за что */
+  .node{padding:13px 15px;border-radius:18px;gap:2px}
+  .node b{font-size:15.5px}
+  .node span{font-size:13.5px;line-height:1.4}
+  .node small{font-size:10px}
+  .vl{height:12px}
+  .team{gap:8px}
+  /* шаги, новости, посты */
+  ol.steps li,ol.newsl li{padding:14px;font-size:14.5px;border-radius:18px}
+  ol.steps i{width:30px;height:30px;font-size:13px}
+  .day summary,.si summary{padding:13px 15px;gap:10px}
+  .day b,.si b{font-size:15px;line-height:1.25}
+  .day pre,.si pre{margin:0 12px 10px;padding:14px;font-size:14px}
+  .si p{margin:0 15px 10px;font-size:14.5px}
+  .day .btn,.si .btn{margin:0 12px 14px}
+  .btn{width:calc(100% - 24px)}
+  #v-renew .btn{width:100%}
+  .check span{font-size:14px}.check span b{font-size:15px}
+  .note{font-size:14px;padding:13px 14px}
+  .caps summary{font-size:15px}
+  .tiles{gap:10px}
+  .nextbtn{display:block;text-align:center}
+  footer{padding:36px 0 30px}
+}
 </style>
 </head>
 <body>
@@ -470,7 +527,7 @@ ol.newsl li b{color:var(--ink)}
 </section>
 
 </div>
-<a class="back" id="back" href="#">← Все разделы</a>
+<div class="topbar" id="topbar"><a class="back" href="#">←<span> Все разделы</span></a><b id="tbt"></b></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -577,12 +634,18 @@ document.querySelectorAll(".check").forEach(card => {
 });
 
 /* навигация по разделам */
+const SECT = {start:"🆕 Новый капитан",rhythm:"🗓 Мой ритм",learn:"🎓 Обучение",news:"📢 Что нового","new":"🚀 Новая команда",sos:"🆘 Трудная ситуация",renew:"🤝 Чтобы никто не слился",stats:"📊 Цифры команды",who:"📞 Кто за что",links:"🔗 Все ссылки"};
 const views = [...document.querySelectorAll(".view")];
+views.forEach(v => { const id = v.id.slice(2); if (id === "home") return;
+  const n = document.createElement("nav"); n.className = "secnav";
+  n.innerHTML = '<div class="grp">Другие разделы</div><div>' + Object.keys(SECT).filter(k => k !== id).map(k => `<a href="#${k}">${SECT[k]}</a>`).join("") + '</div>';
+  v.appendChild(n); });
 function route(){
   const id = (location.hash || "").slice(1);
   const v = document.getElementById("v-" + id) || document.getElementById("v-home");
   views.forEach(x => x.classList.toggle("on", x === v));
   document.body.classList.toggle("inner", v.id !== "v-home");
+  const tb = document.getElementById("tbt"); if (tb) tb.textContent = SECT[v.id.slice(2)] || "";
   window.scrollTo(0, 0); requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 window.addEventListener("hashchange", route);
