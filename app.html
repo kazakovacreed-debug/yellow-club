@@ -155,6 +155,31 @@ body.app .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed
 .tabbar button.on i{filter:none;opacity:1}
 body.app .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
 body.app section>h2{font-size:30px}
+
+.start{background:var(--dark);color:#fff;border-radius:26px;padding:0;margin:0 0 16px;box-shadow:var(--sh)}
+.start>summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:12px;font:800 18px/1.2 "Unb";color:var(--yellow)}
+.start>summary::-webkit-details-marker{display:none}
+.start>summary small{display:block;font:600 13px "Int";color:#ddd6e6;margin-top:3px}
+.start>summary:after{content:"＋";margin-left:auto;color:#fff;font-size:22px}
+.start[open]>summary:after{content:"−"}
+.start ol{margin:0;padding:0 24px 22px 46px}
+.start li{margin:0 0 12px;color:#ddd6e6;font-size:15px}
+.start li b{color:#fff}
+.start a{color:var(--yellow);font-weight:700}
+.srch{position:relative;margin:0 0 16px}
+.srch input{width:100%;border:0;border-radius:999px;padding:15px 20px 15px 48px;font:600 16px "Int";background:#fff;box-shadow:var(--sh);color:var(--ink);outline:none}
+.srch:before{content:"🔍";position:absolute;left:18px;top:13px;font-size:18px}
+#sres{margin:0 0 16px}
+#sres .none{color:var(--mute);padding:6px 4px}
+#sres .hit{display:block;background:#fff;border-radius:18px;padding:14px 16px;margin:0 0 8px;box-shadow:var(--sh);color:var(--ink);text-decoration:none}
+#sres .hit small{display:block;color:var(--purple);font:700 11px "Int";letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+#sres details{margin-bottom:8px}
+.grp{margin:22px 0 8px;font:800 13px "Int";letter-spacing:.08em;text-transform:uppercase;color:var(--purple)}
+.note{background:#FFF5D1;border-radius:18px;padding:14px 16px;font-size:14.5px;margin:14px 0 0}
+.caps{background:#fff;border-radius:20px;box-shadow:var(--sh);margin-top:14px}
+.caps summary{cursor:pointer;padding:16px 18px;font:800 16px "Unb"}
+.caps div{padding:0 18px 18px;font-size:14px;line-height:1.9;color:var(--ink2)}
+.caps a{color:var(--ink);text-decoration:none;font-weight:600;margin-right:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -176,6 +201,21 @@ body.app section>h2{font-size:30px}
   <span class="pill">МОЙ РИТМ</span>
   <h2><span class="gt">что делать капитану</span></h2>
   <p class="lead">Главное правило: капитан не просто мотивирует, а сам показывает пример 💛 Отмечай галочки — они сохраняются на твоём телефоне.</p>
+  <div class="srch"><input id="q" type="search" placeholder="Поиск: молчит, пауза, Zoom, кейс…" autocomplete="off"></div>
+  <div id="sres"></div>
+  <details class="start">
+    <summary><span>🆕</span><span>Я новый капитан: первые 7 дней<small>С чего начать — по шагам</small></span></summary>
+    <ol>
+      <li><b>День 1. Обучение капитанов.</b> Посмотри уроки Тани — <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">обучение для капитанов</a>. Видео 3 обязательно. И пройди <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">Школу капитанов</a>.</li>
+      <li><b>День 1. Стандарт капитана.</b> Прочитай <a href="standart.html">Стандарт капитана</a> — что капитан делает каждый день, неделю и месяц.</li>
+      <li><b>День 2. Познакомься с наставником</b> в чате наставника и напиши Насте <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a>, что ты на связи. Найди закреп в ветке «Важная информация» капитанского чата — там твоя личная ссылка для людей, чтобы остаться в клубе.</li>
+      <li><b>День 2. Знакомство с командой.</b> Первый пост из раздела «Новая команда» и свой кружочек. Дальше — по посту в день, 14 дней.</li>
+      <li><b>День 3. Цифры команды.</b> Найди свою личную статистику в <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener">таблице капитанов</a> и проверь, что в чате есть <a href="https://t.me/yellowchetchik_bot" target="_blank" rel="noopener">бот-счётчик</a>. Кто пришёл и выбыл — <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener">@Airat_help_bot</a>.</li>
+      <li><b>День 4–5. Каждому лично.</b> Напиши каждому, кто ещё не представился, — готовые сообщения в методичке <a href="molchuny.html">«Что делать с молчунами»</a>.</li>
+      <li><b>Выходные. Ритм клуба.</b> Суббота 10:00 МСК — капитанский созвон. Воскресенье 10:00–13:00 МСК — эфир Айрата, позови команду. Всё в <a href="https://calendar.app.google/tdGjdhTntwD8hpZv8" target="_blank" rel="noopener">календаре клуба</a>.</li>
+      <li><b>Если трудно</b> — не исчезай: наставник или Настя. Это нормально 💛</li>
+    </ol>
+  </details>
   <div class="cols">
     <div class="card check" data-key="d"><h3 class="g2">Каждый день</h3>
       <label><input type="checkbox"><span><b>🎥 Утренний кружочек</b>Заряди команду и дай одно действие на день</span></label>
@@ -259,17 +299,41 @@ body.app section>h2{font-size:30px}
     <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener"><b>👥 Кто пришёл и выбыл</b><span>Новые люди в команде и те, кто ушёл</span><i>@Airat_help_bot</i></a>
   </div>
   <h3 style="margin:30px 0 12px">Главные ссылки капитана</h3>
+  <div class="grp">Учиться капитану</div>
   <div class="links">
-    <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">🎓 Школа капитанов</a>
-    <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener">📊 Моя статистика</a>
-    <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener">👥 Кто пришёл и выбыл</a>
+    <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">🎓 Обучение для капитанов (видео 3 — всем)</a>
+    <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">🧢 Школа капитанов</a>
+    <a href="standart.html">📘 Стандарт капитана</a>
+    <a href="molchuny.html">🤐 Что делать с молчунами</a>
+    <a href="https://kazakovacreed-debug.github.io/razbory/" target="_blank" rel="noopener">🔍 Разбор страницы командой</a>
+  </div>
+  <div class="grp">Люди и кейсы</div>
+  <div class="links">
     <a href="https://t.me/c/3751085840/1785/24215" target="_blank" rel="noopener">🤝 Памятка: чтобы человек не слился</a>
     <a href="https://t.me/c/3751085840/1785/8750" target="_blank" rel="noopener">🏆 Как оформить кейс</a>
-    <a href="https://kazakovacreed-debug.github.io/razbory/" target="_blank" rel="noopener">🔍 Разбор страницы командой</a>
+    <a href="kapitany/">⭐ Капитаны недели</a>
+  </div>
+  <div class="grp">Куда вести людей</div>
+  <div class="links">
+    <a href="https://monstersreels.online/yellow_club_vhod" target="_blank" rel="noopener">📚 Уроки клуба</a>
+    <a href="https://t.me/aira_yellowclub_bot" target="_blank" rel="noopener">🤖 Айра — ИИ-помощник</a>
+    <a href="https://t.me/+WmuGMjEisRZmMTEy" target="_blank" rel="noopener">🧩 Чат заданий по форматам</a>
+    <a href="https://t.me/c/4367734652/70" target="_blank" rel="noopener">📝 Задания по форматам</a>
+    <a href="https://monstersreels.online/bolshoy_offline" target="_blank" rel="noopener">🎉 Большой офлайн 6 февраля — билеты</a>
+  </div>
+  <div class="grp">Встречи</div>
+  <div class="links">
+    <a href="https://calendar.app.google/tdGjdhTntwD8hpZv8" target="_blank" rel="noopener">📅 Календарь клуба</a>
     <a href="zoom.html">📲 Как забронировать Zoom</a>
+  </div>
+  <div class="grp">Ещё</div>
+  <div class="links">
+    <a href="https://monstersreels.online/yellow_caps_resale_auth" target="_blank" rel="noopener">💛 Остаться в клубе самому капитану</a>
     <a href="https://app.airat-reels.ru/club/captains" target="_blank" rel="noopener">🧢 Галерея капитанов</a>
     <a href="./">🗺 Навигатор для всех ролей</a>
   </div>
+  <div class="note">🔗 <b>Твоя личная ссылка для людей, чтобы остаться в клубе,</b> — в закрепе ветки «Важная информация» капитанского чата. У каждого капитана своя. Напоминай команде, что она доступна в любой момент.</div>
+  <details class="caps"><summary>🧭 Опытные капитаны — к кому можно за советом (47)</summary><div><a href="https://t.me/aksanacosmetology" target="_blank" rel="noopener">@aksanacosmetology</a><a href="https://t.me/OvcharenkoA" target="_blank" rel="noopener">@OvcharenkoA</a><a href="https://t.me/stylist_aalena" target="_blank" rel="noopener">@stylist_aalena</a><a href="https://t.me/alesiatsch" target="_blank" rel="noopener">@alesiatsch</a><a href="https://t.me/alin_smm" target="_blank" rel="noopener">@alin_smm</a><a href="https://t.me/coachmotivator" target="_blank" rel="noopener">@coachmotivator</a><a href="https://t.me/AnastasiyaTcvetkova" target="_blank" rel="noopener">@AnastasiyaTcvetkova</a><a href="https://t.me/anetta_step" target="_blank" rel="noopener">@anetta_step</a><a href="https://t.me/AnnaEcoClub_63" target="_blank" rel="noopener">@AnnaEcoClub_63</a><a href="https://t.me/anny_karty" target="_blank" rel="noopener">@anny_karty</a><a href="https://t.me/anna_lopatuhina" target="_blank" rel="noopener">@anna_lopatuhina</a><a href="https://t.me/rozhkoweronika" target="_blank" rel="noopener">@rozhkoweronika</a><a href="https://t.me/pashcovski" target="_blank" rel="noopener">@pashcovski</a><a href="https://t.me/diKHismetova_252" target="_blank" rel="noopener">@diKHismetova_252</a><a href="https://t.me/JevgenijaDavidova" target="_blank" rel="noopener">@JevgenijaDavidova</a><a href="https://t.me/bilingvi_online" target="_blank" rel="noopener">@bilingvi_online</a><a href="https://t.me/matveevaelena2308" target="_blank" rel="noopener">@matveevaelena2308</a><a href="https://t.me/Zafira05" target="_blank" rel="noopener">@Zafira05</a><a href="https://t.me/Konovalovivan123" target="_blank" rel="noopener">@Konovalovivan123</a><a href="https://t.me/ilmiratt" target="_blank" rel="noopener">@ilmiratt</a><a href="https://t.me/Goncharov_Ilya" target="_blank" rel="noopener">@Goncharov_Ilya</a><a href="https://t.me/irina_zodi" target="_blank" rel="noopener">@irina_zodi</a><a href="https://t.me/IRINAKalashni" target="_blank" rel="noopener">@IRINAKalashni</a><a href="https://t.me/irinapasova" target="_blank" rel="noopener">@irinapasova</a><a href="https://t.me/karinakrasaa" target="_blank" rel="noopener">@karinakrasaa</a><a href="https://t.me/kristine_jeske" target="_blank" rel="noopener">@kristine_jeske</a><a href="https://t.me/Kseniya_Levakova" target="_blank" rel="noopener">@Kseniya_Levakova</a><a href="https://t.me/mariprimak" target="_blank" rel="noopener">@mariprimak</a><a href="https://t.me/marinapopov_" target="_blank" rel="noopener">@marinapopov_</a><a href="https://t.me/Nacinov" target="_blank" rel="noopener">@Nacinov</a><a href="https://t.me/Masha_Fateeva" target="_blank" rel="noopener">@Masha_Fateeva</a><a href="https://t.me/milaraevska" target="_blank" rel="noopener">@milaraevska</a><a href="https://t.me/N13ras" target="_blank" rel="noopener">@N13ras</a><a href="https://t.me/NataDecoradora" target="_blank" rel="noopener">@NataDecoradora</a><a href="https://t.me/Oksana_Kozelko" target="_blank" rel="noopener">@Oksana_Kozelko</a><a href="https://t.me/Olga_Panisheva_07" target="_blank" rel="noopener">@Olga_Panisheva_07</a><a href="https://t.me/Olga_Sahankova" target="_blank" rel="noopener">@Olga_Sahankova</a><a href="https://t.me/Ab123_456" target="_blank" rel="noopener">@Ab123_456</a><a href="https://t.me/regina_dietologg" target="_blank" rel="noopener">@regina_dietologg</a><a href="https://t.me/rk_advokatormsk" target="_blank" rel="noopener">@rk_advokatormsk</a><a href="https://t.me/Evgen_Rudakov" target="_blank" rel="noopener">@Evgen_Rudakov</a><a href="https://t.me/Svetlana_DanilovaV" target="_blank" rel="noopener">@Svetlana_DanilovaV</a><a href="https://t.me/Taisiya_Deynega" target="_blank" rel="noopener">@Taisiya_Deynega</a><a href="https://t.me/tanya_trenit" target="_blank" rel="noopener">@tanya_trenit</a><a href="https://t.me/tati_sokol" target="_blank" rel="noopener">@tati_sokol</a><a href="https://t.me/jbanik" target="_blank" rel="noopener">@jbanik</a><a href="https://t.me/komjulia" target="_blank" rel="noopener">@komjulia</a></div></details>
   <p class="muted">Ссылки t.me/c/… открываются, если ты в капитанском чате.</p>
 </section>
 
@@ -404,6 +468,41 @@ document.querySelectorAll(".check").forEach(card => {
   window.toast = function(t){ orig(t); try{ tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred("success"); }catch(e){} };
 })();
 
+
+(function(){
+  const q = document.getElementById("q"), out = document.getElementById("sres");
+  if (!q) return;
+  const norm = s => s.toLowerCase().replace(/ё/g, "е");
+  function items(){
+    const r = [];
+    document.querySelectorAll("#days details, #sit details").forEach(d => r.push({kind: d.closest("#days") ? "Пост новой команде" : "Трудная ситуация", el: d, text: d.textContent}));
+    document.querySelectorAll(".check label").forEach(l => r.push({kind: "Мой ритм", el: l, text: l.textContent}));
+    document.querySelectorAll(".start li").forEach(l => r.push({kind: "Новый капитан", el: l, text: l.textContent}));
+    document.querySelectorAll(".links a, .contacts a, #who .node").forEach(a => r.push({kind: "Ссылки и люди", el: a, text: a.textContent}));
+    document.querySelectorAll("#renew .card").forEach(c => r.push({kind: "Чтобы никто не слился", el: c, text: c.textContent}));
+    return r;
+  }
+  let ALL = null;
+  q.addEventListener("input", () => {
+    const v = norm(q.value.trim());
+    out.innerHTML = "";
+    if (v.length < 2) return;
+    ALL = ALL || items();
+    const words = v.split(/\s+/);
+    const hits = ALL.filter(i => { const t = norm(i.text); return words.every(w => t.includes(w)); }).slice(0, 12);
+    if (!hits.length) { out.innerHTML = '<div class="none">Ничего не нашлось. Напиши Насте @kazakova_tg — добавим.</div>'; return; }
+    hits.forEach(h => {
+      if (h.el.tagName === "DETAILS") { const c = h.el.cloneNode(true); c.open = true; out.appendChild(c); return; }
+      const href = h.el.getAttribute && h.el.getAttribute("href");
+      const a = document.createElement(href ? "a" : "div");
+      a.className = "hit";
+      if (href) { a.href = href; if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; } }
+      const cl = h.el.cloneNode(true); cl.querySelectorAll("b,small,span,i").forEach(x => x.append(" "));
+      a.innerHTML = "<small>" + h.kind + "</small>" + cl.textContent.replace(/\s+/g, " ").trim().replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+      out.appendChild(a);
+    });
+  });
+})();
 </script>
 </body>
 </html>
