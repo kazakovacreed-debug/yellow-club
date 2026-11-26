@@ -163,121 +163,228 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
 .caps summary{cursor:pointer;padding:16px 18px;font:800 16px "Unb"}
 .caps div{padding:0 18px 18px;font-size:14px;line-height:1.9;color:var(--ink2)}
 .caps a{color:var(--ink);text-decoration:none;font-weight:600;margin-right:10px;white-space:nowrap}
+
+/* --- сайт по разделам --- */
+.view{display:none}.view.on{display:block}
+section.view{padding:70px 0 60px}
+body.inner header{display:none}
+.cols{grid-template-columns:1fr 1fr}
+.pill.sm{font-size:11px;padding:7px 14px}
+.today{margin:6px 0 8px;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box}
+.todayh{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+.todayh h2{font-size:clamp(26px,5vw,36px);text-transform:lowercase}
+.todayf{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.todayf .more{font-weight:700;color:var(--red);text-decoration:none;padding-top:8px}
+.check a{color:var(--red);font-weight:700}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tiles a{color:var(--ink);background:#fff;border-radius:22px;padding:18px;text-decoration:none;box-shadow:var(--sh);transition:transform .15s;display:flex;flex-direction:column;min-height:132px}
+.tiles a:hover{transform:translateY(-3px)}
+.tiles a:active{transform:scale(.98)}
+.tiles span{font-size:28px}
+.tiles b{font:800 16px/1.15 "Unb";margin:10px 0 4px}
+.tiles small{color:var(--mute);font-size:13px;margin-top:auto}
+.tiles a.hi{background:var(--dark);color:#fff}.tiles a.hi b{color:var(--yellow)}.tiles a.hi small{color:#ddd6e6}
+.back{position:fixed;top:14px;left:14px;z-index:50;display:none;background:var(--ink);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:11px 18px;border-radius:999px;box-shadow:var(--sh)}
+body.inner .back{display:inline-block}
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+ol.steps li{display:flex;gap:14px;background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--sh);font-size:15.5px;color:var(--ink2)}
+ol.steps i{font:900 15px "Unb";font-style:normal;color:#fff;background:var(--grad);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+ol.steps b{display:block;color:var(--ink);font-size:16px;margin-bottom:2px}
+ol.steps a,.newsl a,.lead a{color:var(--red);font-weight:700}
+.nextbtn{display:inline-block;margin-top:18px;background:var(--ink);color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:999px}
+ol.newsl{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:n}
+ol.newsl li{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--sh);font-size:15.5px;color:var(--ink2)}
+ol.newsl li b{color:var(--ink)}
+#v-home .grp{margin:26px 0 10px}
+#v-home header{padding-top:40px}
+#v-home header h1{margin:16px 0 10px}
+@media(max-width:820px){.tiles{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}}
+@media(max-width:380px){.tiles a{min-height:118px;padding:15px}.tiles b{font-size:15px}}
 </style>
 </head>
 <body>
 <div class="w">
+
+<!-- ========== ГЛАВНАЯ ========== -->
+<div class="view" id="v-home">
 <header>
   <span class="pill">🧢 ТОЛЬКО ДЛЯ КАПИТАНОВ</span>
   <h1><span class="gt">шпаргалка капитана</span></h1>
-  <p><b>Всё, что нужно капитану, — на одной странице.</b> Что делать каждый день, как вести новую команду, что ответить в трудной ситуации и кому писать. Тексты готовы — копируй и отправляй.</p>
-  <nav class="big">
-    <a href="#day"><span>☀️</span><b>Мой день</b><small>чек-лист капитана</small></a>
-    <a href="#new"><span>🚀</span><b>Новая команда</b><small>14 готовых постов</small></a>
-    <a href="#sos"><span>🆘</span><b>Трудная ситуация</b><small>что ответить</small></a>
-    <a href="#who"><span>📞</span><b>Команда клуба</b><small>кто за что и ссылки</small></a>
-  </nav>
+  <p><b>Начни с дела на сегодня</b>, а всё остальное — в разделах ниже. Нажми на раздел, чтобы открыть его.</p>
 </header>
 
-<section id="day">
+<div class="srch"><input id="q" type="search" placeholder="Поиск: молчит, пауза, Zoom, доступ…" autocomplete="off"></div>
+<div id="sres"></div>
+
+<div class="today card check" data-key="d">
+  <div class="todayh"><span class="pill sm">ШАГ 1 · КАЖДЫЙ ДЕНЬ</span><h2 class="g2">с этого начни день</h2></div>
+  <label><input type="checkbox"><span><b>🎥 Утренний кружочек</b>Заряди команду и дай одно действие на день</span></label>
+  <label><input type="checkbox"><span><b>💬 2 часа в чате</b>Ответь на все вопросы, дай ОС по роликам: хук → польза → CTA</span></label>
+  <label><input type="checkbox"><span><b>🔥 Свой Reels</b>Личный пример — выложи свой ролик в команду</span></label>
+  <label><input type="checkbox"><span><b>👀 Кто пропал</b>Напиши лично тем, кто молчит 3+ дня — <a href="#sos">что написать</a></span></label>
+  <div class="todayf"><button class="link reset">Сбросить на новый день</button><a class="more" href="#rhythm">Неделя и месяц →</a></div>
+</div>
+
+<div class="grp">Я капитан</div>
+<nav class="tiles">
+  <a href="#start" class="hi"><span>🆕</span><b>Я новый капитан</b><small>первые 7 дней по шагам</small></a>
+  <a href="#rhythm"><span>🗓</span><b>Мой ритм</b><small>день, неделя, месяц</small></a>
+  <a href="#learn"><span>🎓</span><b>Обучение</b><small>видео Тани, стандарт, метрики</small></a>
+  <a href="#news"><span>📢</span><b>Что нового</b><small>новости клуба · 26.11</small></a>
+</nav>
+
+<div class="grp">Моя команда</div>
+<nav class="tiles">
+  <a href="#new"><span>🚀</span><b>Новая команда</b><small>14 готовых постов</small></a>
+  <a href="#sos"><span>🆘</span><b>Трудная ситуация</b><small>что ответить человеку</small></a>
+  <a href="#renew"><span>🤝</span><b>Чтобы никто не слился</b><small>за 10 дней до конца периода</small></a>
+  <a href="#stats"><span>📊</span><b>Цифры команды</b><small>статистика и боты</small></a>
+</nav>
+
+<div class="grp">Кому писать и куда идти</div>
+<nav class="tiles">
+  <a href="#who"><span>📞</span><b>Кто за что отвечает</b><small>команда клуба и контакты</small></a>
+  <a href="#links"><span>🔗</span><b>Все ссылки</b><small>уроки, боты, календарь, Zoom</small></a>
+</nav>
+
+<footer>
+  <div class="dark rowdark"><div><h3>Чего-то не хватает?</h3><p>Напиши Насте — добавим.</p></div><a class="btn yb" href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a></div>
+  <div class="line"><span>Расти вместе с Жёлтым</span><span>27.11.2026</span></div>
+</footer>
+</div>
+
+<!-- ========== НОВЫЙ КАПИТАН ========== -->
+<section class="view" id="v-start">
+  <span class="pill">НОВЫЙ КАПИТАН</span>
+  <h2><span class="gt">первые 7 дней</span></h2>
+  <p class="lead">Иди по шагам сверху вниз. Если трудно — не исчезай: наставник или Настя. Это нормально 💛</p>
+  <ol class="steps">
+    <li><i>1</i><div><b>День 1. Обучение капитанов</b>Посмотри уроки Тани — <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">обучение для капитанов</a>, видео 3 обязательно. И пройди <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">Школу капитанов</a>.</div></li>
+    <li><i>1</i><div><b>День 1. Стандарт капитана</b>Прочитай <a href="standart.html">Стандарт капитана</a> — что капитан делает каждый день, неделю и месяц.</div></li>
+    <li><i>2</i><div><b>День 2. Наставник и Настя</b>Познакомься с наставником в чате наставника и напиши Насте <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a>, что ты на связи. Найди закреп в ветке «Важная информация» капитанского чата — там твоя личная ссылка для людей, чтобы остаться в клубе.</div></li>
+    <li><i>2</i><div><b>День 2. Знакомство с командой</b>Первый пост из раздела <a href="#new">«Новая команда»</a> и свой кружочек. Дальше — по посту в день, 14 дней.</div></li>
+    <li><i>3</i><div><b>День 3. Цифры команды</b>Найди свою статистику и проверь, что в чате есть бот-счётчик — всё в разделе <a href="#stats">«Цифры команды»</a>.</div></li>
+    <li><i>4</i><div><b>День 4–5. Каждому лично</b>Напиши каждому, кто ещё не представился, — готовые сообщения в методичке <a href="molchuny.html">«Что делать с молчунами»</a>.</div></li>
+    <li><i>6</i><div><b>Выходные. Ритм клуба</b>Суббота 10:00 МСК — капитанский созвон. Воскресенье 10:00–13:00 МСК — эфир Айрата, позови команду. Всё в <a href="https://calendar.app.google/tdGjdhTntwD8hpZv8" target="_blank" rel="noopener">календаре клуба</a>.</div></li>
+  </ol>
+  <a class="nextbtn" href="#rhythm">Дальше: мой ритм →</a>
+</section>
+
+<!-- ========== РИТМ ========== -->
+<section class="view" id="v-rhythm">
   <span class="pill">МОЙ РИТМ</span>
   <h2><span class="gt">что делать капитану</span></h2>
-  <p class="lead">Главное правило: капитан не просто мотивирует, а сам показывает пример 💛 Отмечай галочки — они сохраняются на твоём телефоне.</p>
-  <div class="srch"><input id="q" type="search" placeholder="Поиск: молчит, пауза, Zoom, кейс…" autocomplete="off"></div>
-  <div id="sres"></div>
-  <details class="start news">
-    <summary><span>📢</span><span>Что нового для капитанов<small>10 новостей из капитанского чата · обновлено 26.11</small></span></summary>
-    <ol>
-      <li><b>Пауза (заморозка) теперь от 1 до 14 дней.</b> Человек оформляет её сам: GetCourse → тренинг «Жёлтый клуб» → плашка «Планируете заморозить участие?» → анкета → подписанное заявление в службу заботы. Пауза начинается только после подтверждения заботы; на это время закрыты уроки, чаты и эфиры. В день окончания бот пришлёт ссылку на твой чат.</li>
-      <li><b>Субботний капитанский созвон — обязательно.</b> Не можешь — заранее напиши Насте <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a>. Пропала связь — пусть помощник напишет Тане <a href="https://t.me/Tatteanna" target="_blank" rel="noopener">@Tatteanna</a>.</li>
-      <li><b>Оргвопросы — раз в две недели</b> с командой клуба (Ирина, Настя, Таня) сразу после встречи с Айратом, в 12:30: результаты команд, сложные участники, конфликты, идеи.</li>
-      <li><b>Путеводные звёзды декабря.</b> Ищем капитанов-спикеров для встреч «Успех без фильтров» с молчунами: 100 тыс.+ подписчиков или доход с блога от 100 тыс. ₽ в месяц. 12 мест — пиши Тане <a href="https://t.me/Tatteanna" target="_blank" rel="noopener">@Tatteanna</a>: результат за 2026 и тема.</li>
-      <li><b>Капитаны переходят под наставников</b> — постепенно, новые капитаны приходят каждую неделю.</li>
-      <li><b>Ассистент клуба Наташа</b> <a href="https://t.me/Nataliayoyna" target="_blank" rel="noopener">@Nataliayoyna</a> помогает с командами и сбором данных. Пиши ей, если Таня не на связи.</li>
-      <li><b>Амбассадоры для молчунов.</b> Нужен амбассадор или твой ушёл в «Лидеры 2.0» — напиши Тане и скажи, насколько срочно.</li>
-      <li><b>Кандидаты в лидеры 2.0 и капитаны</b> — встреча-собеседование каждый вторник в 15:00. Зови всех, кому интересно, даже сомневающихся. Кандидатов присылай <a href="https://t.me/c/3751085840/7" target="_blank" rel="noopener">сюда</a>.</li>
-      <li><b>Для твоих людей:</b> Зимняя Лига Лидеров — <a href="https://forms.gle/Unv74BWBEcgP88LT6" target="_blank" rel="noopener">анкета</a> и слово «ХОЧУ В ЗИМНЮЮ ЛИГУ» в <a href="https://t.me/shakurov_airat_rabochay" target="_blank" rel="noopener">@shakurov_airat_rabochay</a>; закрытый проект по монетизации блога с продюсером Александром Чепурным — написать «ХОЧУ» <a href="https://t.me/aleksandryellow" target="_blank" rel="noopener">@aleksandryellow</a> (будет отбор); <a href="https://monstersreels.online/bolshoy_offline" target="_blank" rel="noopener">Большой офлайн 6 февраля</a>.</li>
-      <li><b>«Точка опоры».</b> Анкет пришло много, ответы задерживаются. Успокой своих людей: со всеми свяжутся.</li>
-    </ol>
-  </details>
-  <details class="start">
-    <summary><span>🎓</span><span>Обучение капитанов<small>6 коротких видео от Тани, ~40 минут</small></span></summary>
-    <ol>
-      <li><b>6 видео</b> по 3–8 минут лежат одним постом в ветке «Новости» капитанского чата — <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">открыть обучение</a>. <b>Видео 3 — посмотреть всем.</b> Таня просит пересматривать: процессы и инструменты обновляются.</li>
-      <li><b>Обзор капитанской странички</b> с показателями команды (14.11) — <a href="https://t.me/c/3751085840/4081/41415" target="_blank" rel="noopener">смотреть</a>. Свою страничку бери в <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener">таблице капитанов</a>.</li>
-      <li><b>Школа капитанов</b> — <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">@yellowcapbot</a>. <b>Текстом</b> — <a href="standart.html">Стандарт капитана</a> и <a href="molchuny.html">«Что делать с молчунами»</a>.</li>
-      <li><b>Метрики команды:</b> видео в топике, видео на участника и % участников с нормой видео. Норма: 7 дней — 3 видео, 14 дней — 6, 30 дней — 12. Видео считаются только из топика обратной связи — проси людей присылать ролики туда.</li>
-    </ol>
-  </details>
-  <details class="start">
-    <summary><span>🆕</span><span>Я новый капитан: первые 7 дней<small>С чего начать — по шагам</small></span></summary>
-    <ol>
-      <li><b>День 1. Обучение капитанов.</b> Посмотри уроки Тани — <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">обучение для капитанов</a>. Видео 3 обязательно. И пройди <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">Школу капитанов</a>.</li>
-      <li><b>День 1. Стандарт капитана.</b> Прочитай <a href="standart.html">Стандарт капитана</a> — что капитан делает каждый день, неделю и месяц.</li>
-      <li><b>День 2. Познакомься с наставником</b> в чате наставника и напиши Насте <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a>, что ты на связи. Найди закреп в ветке «Важная информация» капитанского чата — там твоя личная ссылка для людей, чтобы остаться в клубе.</li>
-      <li><b>День 2. Знакомство с командой.</b> Первый пост из раздела «Новая команда» и свой кружочек. Дальше — по посту в день, 14 дней.</li>
-      <li><b>День 3. Цифры команды.</b> Найди свою личную статистику в <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener">таблице капитанов</a> и проверь, что в чате есть <a href="https://t.me/yellowchetchik_bot" target="_blank" rel="noopener">бот-счётчик</a>. Кто пришёл и выбыл — <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener">@Airat_help_bot</a>.</li>
-      <li><b>День 4–5. Каждому лично.</b> Напиши каждому, кто ещё не представился, — готовые сообщения в методичке <a href="molchuny.html">«Что делать с молчунами»</a>.</li>
-      <li><b>Выходные. Ритм клуба.</b> Суббота 10:00 МСК — капитанский созвон. Воскресенье 10:00–13:00 МСК — эфир Айрата, позови команду. Всё в <a href="https://calendar.app.google/tdGjdhTntwD8hpZv8" target="_blank" rel="noopener">календаре клуба</a>.</li>
-      <li><b>Если трудно</b> — не исчезай: наставник или Настя. Это нормально 💛</li>
-    </ol>
-  </details>
+  <p class="lead">Капитан не просто мотивирует, а сам показывает пример 💛 Галочки сохраняются на твоём телефоне. Дела на каждый день — <a href="#">на главной</a>.</p>
   <div class="cols">
-    <div class="card check" data-key="d"><h3 class="g2">Каждый день</h3>
-      <label><input type="checkbox"><span><b>🎥 Утренний кружочек</b>Заряди команду и дай одно действие на день</span></label>
-      <label><input type="checkbox"><span><b>💬 2 часа в чате</b>Ответь на все вопросы, дай ОС по роликам: хук → польза → CTA</span></label>
-      <label><input type="checkbox"><span><b>🔥 Свой Reels</b>Личный пример — выложи свой ролик в команду</span></label>
-      <label><input type="checkbox"><span><b>👀 Кто пропал</b>Напиши лично тем, кто молчит 3+ дня</span></label>
-      <button class="link reset">Сбросить на новый день</button>
-    </div>
     <div class="card check" data-key="w"><h3 class="g2">Каждую неделю</h3>
-      <label><input type="checkbox"><span><b>📊 Норма видео</b>3 видео за 7 дней у каждого. В понедельник — рейтинг команд</span></label>
+      <label><input type="checkbox"><span><b>📊 Норма видео</b>3 видео за 7 дней у каждого</span></label>
       <label><input type="checkbox"><span><b>🎯 Эфир Айрата</b>Вс 10:00 МСК — позови команду, после собери инсайты</span></label>
       <label><input type="checkbox"><span><b>🧢 Капитанский созвон</b>Сб 10:00 МСК — обязательно. Не можешь — заранее напиши Насте</span></label>
       <label><input type="checkbox"><span><b>📢 Ветка «Новости»</b>Передай новости клуба команде</span></label>
-      <label><input type="checkbox"><span><b>📲 Созвон команды</b>По желанию — бронь Zoom заранее</span></label>
+      <label><input type="checkbox"><span><b>📲 Созвон команды</b>По желанию — <a href="zoom.html">бронь Zoom</a> заранее</span></label>
       <button class="link reset">Сбросить на новую неделю</button>
     </div>
     <div class="card check" data-key="m"><h3 class="g2">Каждый месяц</h3>
-      <label><input type="checkbox"><span><b>🤝 Чтобы никто не слился</b>Напиши лично всем, у кого через 10 дней заканчивается период в клубе</span></label>
+      <label><input type="checkbox"><span><b>🤝 Чтобы никто не слился</b>Напиши лично всем, у кого через 10 дней заканчивается период в клубе — <a href="#renew">как</a></span></label>
       <label><input type="checkbox"><span><b>📈 Бот результатов</b>Напомни заполнить «Точка А → Точка Б»: <a href="https://t.me/yellow_cases_bot" target="_blank" rel="noopener">@yellow_cases_bot</a></span></label>
-      <label><input type="checkbox"><span><b>🏆 Кейсы</b>Оформи результаты участников</span></label>
+      <label><input type="checkbox"><span><b>🏆 Кейсы</b>Оформи результаты участников — <a href="https://t.me/c/3751085840/1785/8750" target="_blank" rel="noopener">как оформить</a></span></label>
       <button class="link reset">Сбросить на новый месяц</button>
     </div>
   </div>
   <div class="dark rowdark"><div><h3>Не делаем</h3><p>Не давим и не стыдим · не обещаем результат как гарантию · не оставляем вопрос без ответа дольше суток</p></div></div>
 </section>
 
-<section id="new">
+<!-- ========== ОБУЧЕНИЕ ========== -->
+<section class="view" id="v-learn">
+  <span class="pill">ОБУЧЕНИЕ</span>
+  <h2><span class="gt">учиться капитану</span></h2>
+  <p class="lead">Процессы и инструменты обновляются — Таня просит пересматривать.</p>
+  <div class="contacts">
+    <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener"><b>🎓 6 видео от Тани</b><span>По 3–8 минут, ~40 минут всего, одним постом в ветке «Новости». Видео 3 — посмотреть всем</span><i>открыть обучение →</i></a>
+    <a href="https://t.me/c/3751085840/4081/41415" target="_blank" rel="noopener"><b>📊 Обзор капитанской странички</b><span>Где смотреть показатели своей команды (14.11)</span><i>смотреть →</i></a>
+    <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener"><b>🧢 Школа капитанов</b><span>Обучение в боте</span><i>@yellowcapbot</i></a>
+    <a href="standart.html"><b>📘 Стандарт капитана</b><span>Что капитан делает каждый день, неделю и месяц — текстом</span><i>открыть →</i></a>
+    <a href="molchuny.html"><b>🤐 Что делать с молчунами</b><span>Методичка и готовые сообщения</span><i>открыть →</i></a>
+    <a href="https://kazakovacreed-debug.github.io/razbory/" target="_blank" rel="noopener"><b>🔍 Разбор страницы командой</b><span>Технология разбора</span><i>открыть →</i></a>
+  </div>
+  <div class="note"><b>Метрики команды:</b> видео в топике, видео на участника и % участников с нормой видео. Норма: 7 дней — 3 видео, 14 дней — 6, 30 дней — 12. Видео считаются только из топика обратной связи — проси людей присылать ролики туда.</div>
+</section>
+
+<!-- ========== НОВОСТИ ========== -->
+<section class="view" id="v-news">
+  <span class="pill">ЧТО НОВОГО</span>
+  <h2><span class="gt">новости для капитанов</span></h2>
+  <p class="lead">Из ветки «Новости» капитанского чата · обновлено 26.11</p>
+  <ol class="newsl">
+    <li><b>Пауза (заморозка) теперь от 1 до 14 дней.</b> Человек оформляет её сам: GetCourse → тренинг «Жёлтый клуб» → плашка «Планируете заморозить участие?» → анкета → подписанное заявление в службу заботы. Пауза начинается только после подтверждения заботы; на это время закрыты уроки, чаты и эфиры. В день окончания бот пришлёт ссылку на твой чат. Готовый текст — в <a href="#sos">«Трудной ситуации»</a>.</li>
+    <li><b>Субботний капитанский созвон — обязательно.</b> Не можешь — заранее напиши Насте <a href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a>. Пропала связь — пусть помощник напишет Тане <a href="https://t.me/Tatteanna" target="_blank" rel="noopener">@Tatteanna</a>.</li>
+    <li><b>Путеводные звёзды декабря.</b> Ищем капитанов-спикеров для встреч «Успех без фильтров» с молчунами: 100 тыс.+ подписчиков или доход с блога от 100 тыс. ₽ в месяц. 12 мест — пиши Тане <a href="https://t.me/Tatteanna" target="_blank" rel="noopener">@Tatteanna</a>: результат за 2026 и тема.</li>
+    <li><b>Капитаны переходят под наставников</b> — постепенно, новые капитаны приходят каждую неделю.</li>
+    <li><b>Ассистент клуба Наташа</b> <a href="https://t.me/Nataliayoyna" target="_blank" rel="noopener">@Nataliayoyna</a> помогает с командами и сбором данных. Пиши ей, если Таня не на связи.</li>
+    <li><b>Амбассадоры для молчунов.</b> Нужен амбассадор или твой ушёл в «Лидеры 2.0» — напиши Тане и скажи, насколько срочно.</li>
+    <li><b>Кандидаты в лидеры 2.0 и капитаны</b> — встреча-собеседование каждый вторник в 15:00. Зови всех, кому интересно, даже сомневающихся. Кандидатов присылай <a href="https://t.me/c/3751085840/7" target="_blank" rel="noopener">сюда</a>.</li>
+    <li><b>Для твоих людей:</b> Зимняя Лига Лидеров — <a href="https://forms.gle/Unv74BWBEcgP88LT6" target="_blank" rel="noopener">анкета</a> и слово «ХОЧУ В ЗИМНЮЮ ЛИГУ» в <a href="https://t.me/shakurov_airat_rabochay" target="_blank" rel="noopener">@shakurov_airat_rabochay</a>; закрытый проект по монетизации блога с продюсером Александром Чепурным — написать «ХОЧУ» <a href="https://t.me/aleksandryellow" target="_blank" rel="noopener">@aleksandryellow</a> (будет отбор); <a href="https://monstersreels.online/bolshoy_offline" target="_blank" rel="noopener">Большой офлайн 6 февраля</a>.</li>
+    <li><b>«Точка опоры».</b> Анкет пришло много, ответы задерживаются. Успокой своих людей: со всеми свяжутся.</li>
+  </ol>
+</section>
+
+<!-- ========== НОВАЯ КОМАНДА ========== -->
+<section class="view" id="v-new">
   <span class="pill">НОВАЯ КОМАНДА</span>
   <h2><span class="gt">первые 14 дней</span></h2>
   <p class="lead">Первые две недели решают, останется ли человек. Одна тема в день — нажми на день и скопируй готовый пост.</p>
   <div id="days" class="days"></div>
 </section>
 
-<section id="sos">
+<!-- ========== ТРУДНАЯ СИТУАЦИЯ ========== -->
+<section class="view" id="v-sos">
   <span class="pill">ТРУДНАЯ СИТУАЦИЯ</span>
   <h2><span class="gt">что ответить</span></h2>
   <p class="lead">Выбери ситуацию — увидишь, что сделать, и готовое сообщение.</p>
   <div id="sit" class="sit"></div>
 </section>
 
-<section id="renew">
+<!-- ========== ЧТОБЫ НЕ СЛИЛСЯ ========== -->
+<section class="view" id="v-renew">
   <span class="pill">ЧТОБЫ НИКТО НЕ СЛИЛСЯ</span>
   <h2><span class="gt">не даём слиться с цели</span></h2>
-  <div class="cols">
+  <div class="cols c2">
     <div class="card"><h3 class="g2">За 10 дней до конца периода в клубе</h3>
       <ol class="nums"><li><b>Открой разговор, а не продавай.</b> Спроси, как дела с блогом и с целью.</li><li><b>Найди, что мешает.</b> Время, результат, деньги, страх.</li><li><b>Свяжи с тем, что даёт клуб.</b> Не получается регулярно → команда и ритм; не летят ролики → ОС и разборы.</li><li><b>Дай ссылку, чтобы остаться</b> — она в закрепе «Важная информация». Пауза (заморозка) лучше, чем слиться.</li></ol><p style="margin:12px 0 0;font-size:15px;color:var(--ink2)">🤝 Тебе помогают менеджеры <b>Сандра и Женя</b>: они тоже пишут людям, у кого заканчивается период, и помогают не слиться. Если человек сомневается — скажи Насте, она подключит их.</p>
     </div>
     <div class="card"><h3 class="g2">Первое сообщение</h3><pre id="r1">[Имя], привет 💛 Как ты сейчас с блогом? Помню, ты приходил(а) с целью [цель] — получилось приблизиться? Расскажи, что уже вышло и что пока тормозит — подумаем вместе, как дойти дальше 🚀</pre><button class="btn" data-copy="r1">Скопировать</button></div>
   </div>
+  <div class="contacts" style="margin-top:14px">
+    <a href="https://t.me/c/3751085840/1785/24215" target="_blank" rel="noopener"><b>📌 Памятка</b><span>Чтобы человек не слился — в капитанском чате</span><i>открыть →</i></a>
+    <a href="#sos"><b>🆘 Хочет уйти или на паузу</b><span>Готовые ответы</span><i>трудная ситуация →</i></a>
+  </div>
 </section>
 
-<section id="who">
+<!-- ========== ЦИФРЫ ========== -->
+<section class="view" id="v-stats">
+  <span class="pill">ЦИФРЫ КОМАНДЫ</span>
+  <h2><span class="gt">где смотреть цифры</span></h2>
+  <p class="lead">Как читать страничку — в <a href="https://t.me/c/3751085840/4081/41415" target="_blank" rel="noopener">обзоре от Тани</a>.</p>
+  <div class="contacts">
+    <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener"><b>📊 Моя статистика</b><span>Открой таблицу, найди себя и перейди по своей личной ссылке: видео команды и видео на человека</span><i>таблица капитанов →</i></a>
+    <a href="https://t.me/yellowchetchik_bot" target="_blank" rel="noopener"><b>🎬 Бот-счётчик роликов</b><span>Считает ролики твоей команды. Проверь, что он есть в чате</span><i>@yellowchetchik_bot</i></a>
+    <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener"><b>👥 Кто пришёл и выбыл</b><span>Новые люди в команде и те, кто ушёл</span><i>@Airat_help_bot</i></a>
+    <a href="https://t.me/yellow_cases_bot" target="_blank" rel="noopener"><b>📈 «Точка А → Точка Б»</b><span>Что изменилось у твоих людей. Раз в месяц напоминай заполнить, даже если изменений мало</span><i>TG @yellow_cases_bot</i></a>
+    <a href="https://vk.ru/app54744694" target="_blank" rel="noopener"><b>📈 «Точка А → Точка Б» для ВК</b><span>Та же анкета для команд во ВКонтакте</span><i>vk.ru/app54744694</i></a>
+  </div>
+</section>
+
+<!-- ========== КТО ЗА ЧТО ========== -->
+<section class="view" id="v-who">
   <span class="pill">КОМАНДА КЛУБА</span>
   <h2><span class="gt">кто за что отвечает</span></h2>
-  <p class="lead">Только те, с кем пересекается капитан. Главный контакт по капитанам и командам — Настя.</p>
-  <div class="org">
+  <p class="lead">Главный контакт по капитанам и командам — Настя.</p>
+  <div class="contacts" style="margin-bottom:22px">
+    <a href="https://t.me/zabota_airat" target="_blank" rel="noopener"><b>🛟 Служба заботы</b><span>Доступы, оплата, пауза, перевод в другую команду</span><i>@zabota_airat</i></a>
+    <div class="ct"><b>🧭 Твой наставник</b><span>Сложная ситуация в команде, сам устал, не знаешь, как быть</span><i>в чате наставника</i></div>
+    <div class="ct"><b>💬 Капитанский чат</b><span>Новости клуба и вопросы — ветка «Новости»</span><i>«Капитаны Жёлтого клуба»</i></div>
+  </div>
+<div class="org">
     <div class="lvl"><div class="node top"><small>Собственники клуба</small><b>Айрат и Евгений (Женя)</b><span>Айрат — эксперт, воскресные эфиры-разборы. Евгений — продюсер клуба. Вопросы к ним — в капитанском чате, ветка «Вопросы Айрату и Евгению важно».</span></div></div>
     <div class="vl"></div>
     <div class="lvl"><div class="node top"><small>Исполнительный директор</small><b>Ирина Хакимова</b><span>Руководит всеми отделами клуба.</span></div></div>
@@ -291,63 +398,45 @@ ol.nums li{margin-bottom:10px;font-size:15.5px}
       <div class="node help"><small>Помогают твоим людям не слиться</small><b>Менеджеры Сандра и Женя</b><span>Пишут тем, у кого заканчивается период в клубе: помогают остаться, подобрать срок или поставить паузу.</span></div>
     </div>
   </div>
-  <div class="contacts" style="margin-top:18px">
-    <a href="https://t.me/zabota_airat" target="_blank" rel="noopener"><b>Служба заботы</b><span>Доступы, оплата, перевод в другую команду</span><i>@zabota_airat</i></a>
-    <div class="ct"><b>Твой наставник</b><span>Сложная ситуация в команде, сам устал, не знаешь, как быть</span><i>в чате наставника</i></div>
-    <div class="ct"><b>Капитанский чат</b><span>Новости клуба и вопросы — ветка «Новости»</span><i>«Капитаны Жёлтого клуба»</i></div>
-  </div>
-  <h3 style="margin:30px 0 12px">📊 Моя команда: где смотреть цифры</h3>
-  <div class="contacts">
-    <a href="https://docs.google.com/spreadsheets/d/1v275czeMsOCePNba5wvs-5QVHt4l6STZVF7SVxHCHCY/edit?gid=135189019#gid=135189019" target="_blank" rel="noopener"><b>📊 Моя статистика</b><span>Открой таблицу, найди себя и перейди по своей личной ссылке: видео команды, видео на человека, место в рейтинге</span><i>таблица капитанов →</i></a>
-    <a href="https://t.me/yellowchetchik_bot" target="_blank" rel="noopener"><b>🎬 Бот-счётчик роликов</b><span>Считает ролики и баллы твоей команды: 10 баллов = 1 видео</span><i>@yellowchetchik_bot</i></a>
-    <a href="https://t.me/yellow_cases_bot" target="_blank" rel="noopener"><b>📈 Бот результатов «Точка А → Точка Б»</b><span>Что изменилось у твоих людей. Раз в месяц напоминай команде заполнить, даже если изменений мало</span><i>TG @yellow_cases_bot</i></a>
-    <a href="https://vk.ru/app54744694" target="_blank" rel="noopener"><b>📈 «Точка А → Точка Б» для ВК</b><span>Та же анкета для команд во ВКонтакте</span><i>vk.ru/app54744694</i></a>
-    <a href="https://t.me/Airat_help_bot" target="_blank" rel="noopener"><b>👥 Кто пришёл и выбыл</b><span>Новые люди в команде и те, кто ушёл</span><i>@Airat_help_bot</i></a>
-  </div>
-  <h3 style="margin:30px 0 12px">Главные ссылки капитана</h3>
-  <div class="grp">Учиться капитану</div>
-  <div class="links">
-    <a href="https://t.me/c/3751085840/4081/36901" target="_blank" rel="noopener">🎓 Обучение для капитанов (видео 3 — всем)</a>
-    <a href="https://t.me/yellowcapbot" target="_blank" rel="noopener">🧢 Школа капитанов</a>
-    <a href="standart.html">📘 Стандарт капитана</a>
-    <a href="molchuny.html">🤐 Что делать с молчунами</a>
-    <a href="https://kazakovacreed-debug.github.io/razbory/" target="_blank" rel="noopener">🔍 Разбор страницы командой</a>
-  </div>
-  <div class="grp">Люди и кейсы</div>
-  <div class="links">
-    <a href="https://t.me/c/3751085840/1785/24215" target="_blank" rel="noopener">🤝 Памятка: чтобы человек не слился</a>
-    <a href="https://t.me/c/3751085840/1785/8750" target="_blank" rel="noopener">🏆 Как оформить кейс</a>
-    <a href="kapitany/">⭐ Капитаны недели</a>
-  </div>
+  
+<details class="caps"><summary>🧭 Опытные капитаны — к кому можно за советом (47)</summary><div><a href="https://t.me/aksanacosmetology" target="_blank" rel="noopener">@aksanacosmetology</a><a href="https://t.me/OvcharenkoA" target="_blank" rel="noopener">@OvcharenkoA</a><a href="https://t.me/stylist_aalena" target="_blank" rel="noopener">@stylist_aalena</a><a href="https://t.me/alesiatsch" target="_blank" rel="noopener">@alesiatsch</a><a href="https://t.me/alin_smm" target="_blank" rel="noopener">@alin_smm</a><a href="https://t.me/coachmotivator" target="_blank" rel="noopener">@coachmotivator</a><a href="https://t.me/AnastasiyaTcvetkova" target="_blank" rel="noopener">@AnastasiyaTcvetkova</a><a href="https://t.me/anetta_step" target="_blank" rel="noopener">@anetta_step</a><a href="https://t.me/AnnaEcoClub_63" target="_blank" rel="noopener">@AnnaEcoClub_63</a><a href="https://t.me/anny_karty" target="_blank" rel="noopener">@anny_karty</a><a href="https://t.me/anna_lopatuhina" target="_blank" rel="noopener">@anna_lopatuhina</a><a href="https://t.me/rozhkoweronika" target="_blank" rel="noopener">@rozhkoweronika</a><a href="https://t.me/pashcovski" target="_blank" rel="noopener">@pashcovski</a><a href="https://t.me/diKHismetova_252" target="_blank" rel="noopener">@diKHismetova_252</a><a href="https://t.me/JevgenijaDavidova" target="_blank" rel="noopener">@JevgenijaDavidova</a><a href="https://t.me/bilingvi_online" target="_blank" rel="noopener">@bilingvi_online</a><a href="https://t.me/matveevaelena2308" target="_blank" rel="noopener">@matveevaelena2308</a><a href="https://t.me/Zafira05" target="_blank" rel="noopener">@Zafira05</a><a href="https://t.me/Konovalovivan123" target="_blank" rel="noopener">@Konovalovivan123</a><a href="https://t.me/ilmiratt" target="_blank" rel="noopener">@ilmiratt</a><a href="https://t.me/Goncharov_Ilya" target="_blank" rel="noopener">@Goncharov_Ilya</a><a href="https://t.me/irina_zodi" target="_blank" rel="noopener">@irina_zodi</a><a href="https://t.me/IRINAKalashni" target="_blank" rel="noopener">@IRINAKalashni</a><a href="https://t.me/irinapasova" target="_blank" rel="noopener">@irinapasova</a><a href="https://t.me/karinakrasaa" target="_blank" rel="noopener">@karinakrasaa</a><a href="https://t.me/kristine_jeske" target="_blank" rel="noopener">@kristine_jeske</a><a href="https://t.me/Kseniya_Levakova" target="_blank" rel="noopener">@Kseniya_Levakova</a><a href="https://t.me/mariprimak" target="_blank" rel="noopener">@mariprimak</a><a href="https://t.me/marinapopov_" target="_blank" rel="noopener">@marinapopov_</a><a href="https://t.me/Nacinov" target="_blank" rel="noopener">@Nacinov</a><a href="https://t.me/Masha_Fateeva" target="_blank" rel="noopener">@Masha_Fateeva</a><a href="https://t.me/milaraevska" target="_blank" rel="noopener">@milaraevska</a><a href="https://t.me/N13ras" target="_blank" rel="noopener">@N13ras</a><a href="https://t.me/NataDecoradora" target="_blank" rel="noopener">@NataDecoradora</a><a href="https://t.me/Oksana_Kozelko" target="_blank" rel="noopener">@Oksana_Kozelko</a><a href="https://t.me/Olga_Panisheva_07" target="_blank" rel="noopener">@Olga_Panisheva_07</a><a href="https://t.me/Olga_Sahankova" target="_blank" rel="noopener">@Olga_Sahankova</a><a href="https://t.me/Ab123_456" target="_blank" rel="noopener">@Ab123_456</a><a href="https://t.me/regina_dietologg" target="_blank" rel="noopener">@regina_dietologg</a><a href="https://t.me/rk_advokatormsk" target="_blank" rel="noopener">@rk_advokatormsk</a><a href="https://t.me/Evgen_Rudakov" target="_blank" rel="noopener">@Evgen_Rudakov</a><a href="https://t.me/Svetlana_DanilovaV" target="_blank" rel="noopener">@Svetlana_DanilovaV</a><a href="https://t.me/Taisiya_Deynega" target="_blank" rel="noopener">@Taisiya_Deynega</a><a href="https://t.me/tanya_trenit" target="_blank" rel="noopener">@tanya_trenit</a><a href="https://t.me/tati_sokol" target="_blank" rel="noopener">@tati_sokol</a><a href="https://t.me/jbanik" target="_blank" rel="noopener">@jbanik</a><a href="https://t.me/komjulia" target="_blank" rel="noopener">@komjulia</a></div></details>
+  
+</section>
+
+<!-- ========== ССЫЛКИ ========== -->
+<section class="view" id="v-links">
+  <span class="pill">ВСЕ ССЫЛКИ</span>
+  <h2><span class="gt">ссылки капитана</span></h2>
+  <div class="note" style="margin:0 0 6px">🔗 <b>Твоя личная ссылка для людей, чтобы остаться в клубе,</b> — в закрепе ветки «Важная информация» капитанского чата. У каждого капитана своя.</div>
   <div class="grp">Куда вести людей</div>
   <div class="links">
     <a href="https://monstersreels.online/yellow_club_vhod" target="_blank" rel="noopener">📚 Уроки клуба</a>
     <a href="https://t.me/aira_yellowclub_bot" target="_blank" rel="noopener">🤖 Айра — ИИ-помощник</a>
     <a href="https://t.me/+WmuGMjEisRZmMTEy" target="_blank" rel="noopener">🧩 Чат заданий по форматам</a>
     <a href="https://t.me/c/4367734652/70" target="_blank" rel="noopener">📝 Задания по форматам</a>
-    <a href="https://monstersreels.online/bolshoy_offline" target="_blank" rel="noopener">🎉 Большой офлайн 6 февраля — билеты</a>
+    <a href="https://monstersreels.online/bolshoy_offline" target="_blank" rel="noopener">🎉 Большой офлайн 6 февраля</a>
   </div>
   <div class="grp">Встречи</div>
   <div class="links">
     <a href="https://calendar.app.google/tdGjdhTntwD8hpZv8" target="_blank" rel="noopener">📅 Календарь клуба</a>
     <a href="zoom.html">📲 Как забронировать Zoom</a>
   </div>
+  <div class="grp">Люди и кейсы</div>
+  <div class="links">
+    <a href="https://t.me/c/3751085840/1785/8750" target="_blank" rel="noopener">🏆 Как оформить кейс</a>
+    <a href="kapitany/">⭐ Капитаны недели</a>
+    <a href="https://app.airat-reels.ru/club/captains" target="_blank" rel="noopener">🧢 Галерея капитанов</a>
+  </div>
   <div class="grp">Ещё</div>
   <div class="links">
     <a href="https://monstersreels.online/yellow_caps_resale_auth" target="_blank" rel="noopener">💛 Остаться в клубе самому капитану</a>
-    <a href="https://app.airat-reels.ru/club/captains" target="_blank" rel="noopener">🧢 Галерея капитанов</a>
     <a href="./">🗺 Навигатор для всех ролей</a>
   </div>
-  <div class="note">🔗 <b>Твоя личная ссылка для людей, чтобы остаться в клубе,</b> — в закрепе ветки «Важная информация» капитанского чата. У каждого капитана своя. Напоминай команде, что она доступна в любой момент.</div>
-  <details class="caps"><summary>🧭 Опытные капитаны — к кому можно за советом (47)</summary><div><a href="https://t.me/aksanacosmetology" target="_blank" rel="noopener">@aksanacosmetology</a><a href="https://t.me/OvcharenkoA" target="_blank" rel="noopener">@OvcharenkoA</a><a href="https://t.me/stylist_aalena" target="_blank" rel="noopener">@stylist_aalena</a><a href="https://t.me/alesiatsch" target="_blank" rel="noopener">@alesiatsch</a><a href="https://t.me/alin_smm" target="_blank" rel="noopener">@alin_smm</a><a href="https://t.me/coachmotivator" target="_blank" rel="noopener">@coachmotivator</a><a href="https://t.me/AnastasiyaTcvetkova" target="_blank" rel="noopener">@AnastasiyaTcvetkova</a><a href="https://t.me/anetta_step" target="_blank" rel="noopener">@anetta_step</a><a href="https://t.me/AnnaEcoClub_63" target="_blank" rel="noopener">@AnnaEcoClub_63</a><a href="https://t.me/anny_karty" target="_blank" rel="noopener">@anny_karty</a><a href="https://t.me/anna_lopatuhina" target="_blank" rel="noopener">@anna_lopatuhina</a><a href="https://t.me/rozhkoweronika" target="_blank" rel="noopener">@rozhkoweronika</a><a href="https://t.me/pashcovski" target="_blank" rel="noopener">@pashcovski</a><a href="https://t.me/diKHismetova_252" target="_blank" rel="noopener">@diKHismetova_252</a><a href="https://t.me/JevgenijaDavidova" target="_blank" rel="noopener">@JevgenijaDavidova</a><a href="https://t.me/bilingvi_online" target="_blank" rel="noopener">@bilingvi_online</a><a href="https://t.me/matveevaelena2308" target="_blank" rel="noopener">@matveevaelena2308</a><a href="https://t.me/Zafira05" target="_blank" rel="noopener">@Zafira05</a><a href="https://t.me/Konovalovivan123" target="_blank" rel="noopener">@Konovalovivan123</a><a href="https://t.me/ilmiratt" target="_blank" rel="noopener">@ilmiratt</a><a href="https://t.me/Goncharov_Ilya" target="_blank" rel="noopener">@Goncharov_Ilya</a><a href="https://t.me/irina_zodi" target="_blank" rel="noopener">@irina_zodi</a><a href="https://t.me/IRINAKalashni" target="_blank" rel="noopener">@IRINAKalashni</a><a href="https://t.me/irinapasova" target="_blank" rel="noopener">@irinapasova</a><a href="https://t.me/karinakrasaa" target="_blank" rel="noopener">@karinakrasaa</a><a href="https://t.me/kristine_jeske" target="_blank" rel="noopener">@kristine_jeske</a><a href="https://t.me/Kseniya_Levakova" target="_blank" rel="noopener">@Kseniya_Levakova</a><a href="https://t.me/mariprimak" target="_blank" rel="noopener">@mariprimak</a><a href="https://t.me/marinapopov_" target="_blank" rel="noopener">@marinapopov_</a><a href="https://t.me/Nacinov" target="_blank" rel="noopener">@Nacinov</a><a href="https://t.me/Masha_Fateeva" target="_blank" rel="noopener">@Masha_Fateeva</a><a href="https://t.me/milaraevska" target="_blank" rel="noopener">@milaraevska</a><a href="https://t.me/N13ras" target="_blank" rel="noopener">@N13ras</a><a href="https://t.me/NataDecoradora" target="_blank" rel="noopener">@NataDecoradora</a><a href="https://t.me/Oksana_Kozelko" target="_blank" rel="noopener">@Oksana_Kozelko</a><a href="https://t.me/Olga_Panisheva_07" target="_blank" rel="noopener">@Olga_Panisheva_07</a><a href="https://t.me/Olga_Sahankova" target="_blank" rel="noopener">@Olga_Sahankova</a><a href="https://t.me/Ab123_456" target="_blank" rel="noopener">@Ab123_456</a><a href="https://t.me/regina_dietologg" target="_blank" rel="noopener">@regina_dietologg</a><a href="https://t.me/rk_advokatormsk" target="_blank" rel="noopener">@rk_advokatormsk</a><a href="https://t.me/Evgen_Rudakov" target="_blank" rel="noopener">@Evgen_Rudakov</a><a href="https://t.me/Svetlana_DanilovaV" target="_blank" rel="noopener">@Svetlana_DanilovaV</a><a href="https://t.me/Taisiya_Deynega" target="_blank" rel="noopener">@Taisiya_Deynega</a><a href="https://t.me/tanya_trenit" target="_blank" rel="noopener">@tanya_trenit</a><a href="https://t.me/tati_sokol" target="_blank" rel="noopener">@tati_sokol</a><a href="https://t.me/jbanik" target="_blank" rel="noopener">@jbanik</a><a href="https://t.me/komjulia" target="_blank" rel="noopener">@komjulia</a></div></details>
   <p class="muted">Ссылки t.me/c/… открываются, если ты в капитанском чате.</p>
 </section>
 
-<footer>
-  <div class="dark rowdark"><div><h3>Чего-то не хватает?</h3><p>Напиши Насте — добавим.</p></div><a class="btn yb" href="https://t.me/kazakova_tg" target="_blank" rel="noopener">@kazakova_tg</a></div>
-  <div class="line"><span>Расти вместе с Жёлтым</span><span>23.11.2026</span></div>
-</footer>
 </div>
+<a class="back" id="back" href="#">← Все разделы</a>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -438,7 +527,6 @@ const SIT = [
  ["⚡", "Конфликт или хейт в чате", "Остановить спокойно и публично, сложный разговор — в личке. Если не утихает — наставник.", `Друзья, напомню наше правило 💛 Мы оцениваем видео, а не человека, и даём обратную связь с уважением. Давайте продолжим в этом духе. [Имя], напишу тебе в личку.`],
  ["🪫", "Я сам устал как капитан", "Не исчезай и скажи об этом рано — это нормально. Напиши наставнику или Насте.", `[Имя наставника], привет 💛 Честно: я сейчас устал(а) и чувствую, что команде не хватает моего внимания. Можем созвониться на 15 минут и подумать, как разгрузиться?`],
 ];
-
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 window.toast = function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1800)}
@@ -454,18 +542,28 @@ document.querySelectorAll(".check").forEach(card => {
   card.querySelector(".reset").onclick = () => boxes.forEach((c, i) => { c.checked = false; try { localStorage.removeItem("cap_" + k + i) } catch (e) {} });
 });
 
+/* навигация по разделам */
+const views = [...document.querySelectorAll(".view")];
+function route(){
+  const id = (location.hash || "").slice(1);
+  const v = document.getElementById("v-" + id) || document.getElementById("v-home");
+  views.forEach(x => x.classList.toggle("on", x === v));
+  document.body.classList.toggle("inner", v.id !== "v-home");
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+route();
 
+/* поиск по всем разделам */
 (function(){
   const q = document.getElementById("q"), out = document.getElementById("sres");
-  if (!q) return;
   const norm = s => s.toLowerCase().replace(/ё/g, "е");
+  const sec = el => { const v = el.closest(".view"); return v ? v.id.slice(2) : "home"; };
+  const NAMES = {home:"Главная",start:"Новый капитан",rhythm:"Мой ритм",learn:"Обучение",news:"Что нового","new":"Новая команда",sos:"Трудная ситуация",renew:"Чтобы никто не слился",stats:"Цифры команды",who:"Кто за что",links:"Все ссылки"};
   function items(){
     const r = [];
-    document.querySelectorAll("#days details, #sit details").forEach(d => r.push({kind: d.closest("#days") ? "Пост новой команде" : "Трудная ситуация", el: d, text: d.textContent}));
-    document.querySelectorAll(".check label").forEach(l => r.push({kind: "Мой ритм", el: l, text: l.textContent}));
-    document.querySelectorAll(".start li").forEach(l => r.push({kind: "Новый капитан", el: l, text: l.textContent}));
-    document.querySelectorAll(".links a, .contacts a, #who .node").forEach(a => r.push({kind: "Ссылки и люди", el: a, text: a.textContent}));
-    document.querySelectorAll("#renew .card").forEach(c => r.push({kind: "Чтобы никто не слился", el: c, text: c.textContent}));
+    document.querySelectorAll("#days details, #sit details").forEach(d => r.push({el: d, text: d.textContent}));
+    document.querySelectorAll(".view:not(#v-home) .check label, .steps li, .newsl li, .links a, .contacts a, .contacts .ct, #v-who .node, #v-renew .card, #v-learn .note").forEach(a => r.push({el: a, text: a.textContent}));
     return r;
   }
   let ALL = null;
@@ -478,13 +576,14 @@ document.querySelectorAll(".check").forEach(card => {
     const hits = ALL.filter(i => { const t = norm(i.text); return words.every(w => t.includes(w)); }).slice(0, 12);
     if (!hits.length) { out.innerHTML = '<div class="none">Ничего не нашлось. Напиши Насте @kazakova_tg — добавим.</div>'; return; }
     hits.forEach(h => {
-      if (h.el.tagName === "DETAILS") { const c = h.el.cloneNode(true); c.open = true; out.appendChild(c); return; }
+      if (h.el.tagName === "DETAILS") { const c = h.el.cloneNode(true); c.open = true; c.querySelectorAll("[id]").forEach(x => { x.dataset.src = x.id; x.removeAttribute("id"); }); out.appendChild(c); return; }
       const href = h.el.getAttribute && h.el.getAttribute("href");
-      const a = document.createElement(href ? "a" : "div");
+      const a = document.createElement("a");
       a.className = "hit";
       if (href) { a.href = href; if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; } }
+      else a.href = "#" + sec(h.el);
       const cl = h.el.cloneNode(true); cl.querySelectorAll("b,small,span,i").forEach(x => x.append(" "));
-      a.innerHTML = "<small>" + h.kind + "</small>" + cl.textContent.replace(/\s+/g, " ").trim().replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+      a.innerHTML = "<small>" + NAMES[sec(h.el)] + "</small>" + esc(cl.textContent.replace(/\s+/g, " ").trim());
       out.appendChild(a);
     });
   });
