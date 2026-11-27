@@ -260,22 +260,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 <body>
 <div class="cur"></div><div class="cur2"></div>
 
-<header class="hero" id="top">
-  <canvas id="cloud" aria-label="Облако кейсов клуба: каждая сфера — история участника или капитан"></canvas>
-  <div class="tip" id="tip"></div>
-  <div class="spin-hint">крути сферу</div>
-  <div class="wrap hero-in">
-    <div class="eyebrow">Жёлтый клуб · миссия</div>
-    <h1>1 000 000 счастливых людей <span>с&nbsp;Жёлтым</span></h1>
-    <p class="lead">Подписчики, клиенты, деньги и миллионные рилсы участников клуба.</p>
-    <div class="hero-row">
-      <div class="big-count"><span data-count="1961">0</span><small>историй из 1 000 000</small></div>
-      <div class="hint">Нажми на фото — откроется история</div>
-    </div>
-  </div>
-</header>
-
-<div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
 
 <section class="mission" id="mission-s" aria-labelledby="h-mission">
   <canvas id="dust" aria-hidden="true"></canvas>
@@ -286,6 +270,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
     <div class="mission-cta"><button class="btn" data-go="cases-s">Смотреть кейсы</button><button class="btn ghost" data-go="ladder-s">Категории кейсов</button></div>
   </div>
 </section>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+
 
 <section id="ladder-s"><div class="wrap">
   <div class="eyebrow rv">Категории кейсов</div>
@@ -323,6 +310,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
   <ol class="mil" id="mil"></ol>
   <div class="more"><button class="btn" id="more-mil">Показать всех</button></div>
 </div></section>
+
+<header class="hero" id="top">
+  <canvas id="cloud" aria-label="Облако кейсов клуба: каждая сфера — история участника или капитан"></canvas>
+  <div class="tip" id="tip"></div>
+  <div class="spin-hint">крути сферу</div>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Лица клуба</div>
+    <h1>они уже <span>смогли</span></h1>
+    <p class="lead">Капитаны и участники, у которых есть результат.</p>
+    <div class="hero-row">
+      <div class="big-count"><span data-count="1961">0</span><small>историй из 1 000 000</small></div>
+      <div class="hint">Нажми на фото — откроется история</div>
+    </div>
+  </div>
+</header>
 
 <section id="cases-s" style="padding-top:0"><div class="wrap">
   <div class="eyebrow rv">Все истории</div>
