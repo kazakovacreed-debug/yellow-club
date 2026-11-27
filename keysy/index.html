@@ -195,6 +195,17 @@ input[type=search]{flex:1 1 280px;min-width:0;font:inherit;color:var(--ink);back
 .btn{font:800 14px var(--text);border:0;border-radius:99px;padding:15px 26px;background:var(--y);color:var(--ink);cursor:pointer;transition:transform .25s,box-shadow .25s}
 .btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
 
+/* Три графы по подписчикам */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+@media (max-width:900px){.tiers{grid-template-columns:1fr}}
+.tier{background:rgba(255,255,255,.55);border-radius:28px;padding:14px;display:grid;gap:10px;min-width:0}
+.tier-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 8px 4px}
+.tier-h b{font:900 clamp(18px,2vw,24px)/1.1 var(--display);text-transform:lowercase}
+.tier-h span{font:900 22px/1 var(--display);color:var(--red);font-variant-numeric:tabular-nums}
+.tier.t3{background:var(--dark);color:#FFF7F0}.tier.t3 .tier-h b{color:var(--y)}.tier.t3 .tier-h span{color:var(--y)}
+.tier .case{padding:16px;color:var(--ink)}
+.tier .more{margin-top:4px}
+.act{font:700 13px var(--text);border:0;border-radius:99px;padding:8px 14px;background:var(--ink);color:var(--y);cursor:pointer}
 /* Матрёшка: раскрывающиеся списки */
 .tree{display:grid;gap:10px;margin-top:28px}
 .tree details{background:var(--card);border-radius:22px;box-shadow:var(--sh);overflow:hidden}
@@ -324,13 +335,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
   <h2 class="rv">кейсы <em>клуба</em></h2>
   <div class="filters">
     <div class="row"><input type="search" id="q" placeholder="Поиск: ниша, имя, результат, Instagram" aria-label="Поиск по кейсам"></div>
-    <div class="row" id="f-cat" role="group" aria-label="Категория"></div>
-    <div class="row" id="f-sphere" role="group" aria-label="Сфера"></div>
-    <div class="row"><select id="f-cap" aria-label="Капитан"><option value="">Все капитаны</option></select></div>
+    <div class="row" id="active"></div>
   </div>
-  <p class="note" id="found"></p>
-  <div class="grid" id="grid"></div>
-  <div class="more"><button class="btn" id="more">Показать ещё</button></div>
+  <div class="tiers" id="tiers"></div>
 </div></section>
 
 <section id="acc-s" style="padding-top:0"><div class="wrap">
@@ -589,46 +596,49 @@ $('#bubbles').innerHTML = sph.map(([k, l, n], i) => {
 $('#bubbles').onclick = (e) => { const b = e.target.closest('[data-sphere]'); if (b) { setFilter('sphere', b.dataset.sphere); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); } };
 
 /* ---------- Галерея ---------- */
-const st = { q: '', cat: '', sphere: '', shown: 24 };
-$('#f-cat').innerHTML = `<button class="chip" data-f="cat" data-v="" aria-pressed="true">Все кейсы</button>` + [...catOrder, 'none'].filter((k) => CAT[k].n).map((k) => `<button class="chip" data-f="cat" data-v="${k}" aria-pressed="false">${CAT[k].ic} ${esc(CAT[k].short)} · ${CAT[k].n}</button>`).join('');
-$('#f-sphere').innerHTML = `<button class="chip" data-f="sphere" data-v="" aria-pressed="true">Все сферы</button>` + sph.map(([k, l, n]) => `<button class="chip" data-f="sphere" data-v="${k}" aria-pressed="false">${esc(l)} · ${n}</button>`).join('');
-function setFilter(f, v) {
-  st[f] = v; document.querySelectorAll(`[data-f="${f}"]`).forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === v)); render(true);
-}
-document.querySelector('.filters').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) setFilter(b.dataset.f, b.dataset.v); });
+const st = { q: '', cat: '', sphere: '', cap: '' };
+const TIERS = [
+  ['t1', 'до 10 000 подписчиков', (c) => !(c.categories || []).some((k) => /^subs/.test(k))],
+  ['t2', '10 000 – 100 000', (c) => (c.categories || []).includes('subs10k') && !(c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
+  ['t3', 'от 100 000', (c) => (c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
+];
+const shown = { t1: 8, t2: 8, t3: 8 };
+function setFilter(f, v) { st[f] = v; if (f === 'cap') { const sel = $('#f-cap'); if (sel) sel.value = v; } render(true); }
 $('#q').oninput = (e) => { st.q = e.target.value.trim().toLowerCase(); render(true); };
-$('#more').onclick = () => { st.shown += 24; render(false); };
 const rank = (c) => (topCat(c) === 'none' ? 9 : catRank[topCat(c)]);
 function list() {
   const inCat = (c) => !st.cat || (st.cat === 'none' ? !(c.categories || []).length : (c.categories || []).includes(st.cat));
   return D.cases.filter((c) => inCat(c) && (!st.sphere || c.sphere === st.sphere) && (!st.cap || c.captain === st.cap) &&
     (!st.q || [c.title, c.text, c.name, c.niche, c.team, c.captain, c.result, ...(c.instagram || [])].join(' ').toLowerCase().includes(st.q)))
-    .sort((a, b) => rank(a) - rank(b) || String(b.date).localeCompare(String(a.date)));
+    .sort((a, b) => rank(a) - rank(b) || (!!b.badge - !!a.badge) || String(b.date).localeCompare(String(a.date)));
 }
 function card(c, i) {
   const orb = c.photo ? `<span class="orb"><img src="${esc(c.photo)}" alt=""></span>` : `<span class="orb">${esc(initials(c.name) || '★')}</span>`;
   return `<article class="case" data-i="${i}" tabindex="0">
     <div class="top">${orb}<div>${c.badge ? `<div class="badge">${esc(c.badge)}</div>` : ''}<div class="who">${esc([c.name, c.niche].filter(Boolean).join(' · ') || SPHERE[c.sphere]?.label)}</div></div></div>
     <h3>${esc(c.title || c.result || '')}</h3>
-    <div class="tags">${(c.categories || []).length ? c.categories.map((k) => `<span class="tag st">${CAT[k].ic} ${esc(CAT[k].short)}</span>`).join('') : `<span class="tag">✦ Путь начат</span>`}<span class="tag">${esc(SPHERE[c.sphere]?.label)}</span>${c.team ? `<span class="tag">«${esc(c.team)}»</span>` : ''}</div>
+    ${c.team ? `<div class="tags"><span class="tag">«${esc(c.team)}»</span></div>` : ''}
   </article>`;
 }
 let current = [];
 function render(reset) {
-  if (reset) st.shown = 24;
+  if (reset) Object.keys(shown).forEach((k) => (shown[k] = 8));
   current = list();
-  $('#found').textContent = `${fmt(current.length)} ${plural(current.length, 'история', 'истории', 'историй')}`;
-  $('#grid').innerHTML = current.slice(0, st.shown).map(card).join('') || '<p class="note">Ничего не нашлось — попробуй другой фильтр.</p>';
-  $('#more').hidden = current.length <= st.shown;
+  const lab = { cat: (v) => CAT[v]?.short, sphere: (v) => SPHERE[v]?.label, cap: (v) => 'капитан ' + v };
+  $('#active').innerHTML = ['cat', 'sphere', 'cap'].filter((f) => st[f]).map((f) => `<button class="act" data-clear="${f}">${esc(lab[f](st[f]))} ×</button>`).join('');
+  $('#tiers').innerHTML = TIERS.map(([k, title, fn]) => {
+    const items = current.map((c, i) => [c, i]).filter(([c]) => fn(c));
+    return `<div class="tier ${k}"><div class="tier-h"><b>${title}</b><span>${fmt(items.length)}</span></div>
+      ${items.slice(0, shown[k]).map(([c, i]) => card(c, i)).join('') || '<p class="note" style="padding:0 8px">Пока пусто</p>'}
+      ${items.length > shown[k] ? `<div class="more"><button class="btn" data-more="${k}">Ещё ${Math.min(24, items.length - shown[k])}</button></div>` : ''}</div>`;
+  }).join('');
 }
-$('#grid').addEventListener('click', (e) => { const a = e.target.closest('.case'); if (a) openCase(current[+a.dataset.i]); });
-$('#grid').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const a = e.target.closest('.case'); if (a) openCase(current[+a.dataset.i]); } });
-
-{
-  const caps = [...new Set(D.cases.map((c) => c.captain).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ru'));
-  $('#f-cap').innerHTML += caps.map((n) => `<option>${esc(n)}</option>`).join('');
-  $('#f-cap').onchange = (e) => { st.cap = e.target.value; render(true); };
-}
+$('#active').onclick = (e) => { const b = e.target.closest('[data-clear]'); if (b) setFilter(b.dataset.clear, ''); };
+$('#tiers').addEventListener('click', (e) => {
+  const m = e.target.closest('[data-more]'); if (m) { shown[m.dataset.more] += 24; return render(false); }
+  const a = e.target.closest('.case'); if (a) openCase(current[+a.dataset.i]);
+});
+$('#tiers').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const a = e.target.closest('.case'); if (a) openCase(current[+a.dataset.i]); } });
 render(true);
 
 /* ---------- Матрёшка ---------- */
@@ -642,7 +652,7 @@ render(true);
   </details>`).join('');
   $('#tree').onclick = (e) => {
     const b = e.target.closest('[data-id]'); if (b) return openCase(byId[b.dataset.id]);
-    const a = e.target.closest('[data-cap]'); if (a) { st.cap = a.dataset.cap; $('#f-cap').value = st.cap; render(true); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); }
+    const a = e.target.closest('[data-cap]'); if (a) { setFilter('cap', a.dataset.cap); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); }
   };
 }
 
