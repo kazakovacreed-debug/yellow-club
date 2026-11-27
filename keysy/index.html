@@ -158,6 +158,10 @@ section{padding-block:clamp(56px,8vw,110px)}
 .bub:hover{transform:scale(1.08)}
 .bub b{display:block;font:900 clamp(18px,2.6vw,34px)/1 var(--display)}
 .bub span{font:600 clamp(11px,1.1vw,14px)/1.2 var(--text)}
+.bub .bi{width:clamp(34px,3.6vw,50px);aspect-ratio:1;border-radius:16px;background:var(--ink);display:grid;place-items:center;margin:0 auto 8px;box-shadow:0 8px 20px -8px rgba(20,10,51,.6);transform:rotate(-6deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.bub .bi svg{width:58%;height:58%;fill:none;stroke:var(--y);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bub:hover .bi{transform:rotate(8deg) scale(1.12)}
+.bub.dim .bi{background:var(--grad)}.bub.dim .bi svg{stroke:#fff}
 .bub.dim{background:radial-gradient(circle at 32% 28%,#fff,#EADCF0 70%);color:var(--ink2);box-shadow:var(--sh)}
 @keyframes float{50%{translate:0 -12px}}
 
@@ -263,7 +267,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 @media (max-width:640px){
   .step{grid-template-columns:48px 1fr;padding:18px}.step .n{grid-column:2}.step .bar{grid-column:1/3}
   .lvl{grid-template-columns:auto 1fr}.lvl .n{grid-column:2}
-  .bubbles{height:auto;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.bub{position:static;width:auto!important;height:auto!important;aspect-ratio:1;min-width:120px}
+  .bubbles{height:auto;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.bub{position:static;width:calc(50% - 5px)!important;height:auto!important;aspect-ratio:1;align-self:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -584,6 +588,18 @@ $('#cats').innerHTML = catOrder.map((k) => `<button class="cat rv ${CAT[k].n ? '
 $('#cats-note').textContent = `И ещё ${fmt(CAT.none.n)} — «путь начат»: первые ролики, подписчики, заявки.`;
 $('#cats').onclick = (e) => { const b = e.target.closest('[data-cat]'); if (b) { setFilter('cat', b.dataset.cat); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); } };
 
+const SPH_ICON = {
+  handmade: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-.9-.6-1.3-.6-2.1 0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4c0-4.1-4-7.7-9-7.7z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7.3" r="1"/><circle cx="15" cy="7.8" r="1"/>',
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/>',
+  food: '<path d="M5 12h14l-1.6 8.5H6.6z"/><path d="M6.5 12a5.5 5.5 0 0 1 11 0"/><path d="M12 3.5v2.5"/><path d="M9.5 16v1.5M14.5 16v1.5"/>',
+  expert: '<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M3 12.5h18"/><path d="M11 12.5v2h2v-2"/>',
+  beauty: '<path d="M11 3l1.9 4.9L17.8 9.8l-4.9 1.9L11 16.6l-1.9-4.9L4.2 9.8l4.9-1.9z"/><path d="M18.5 14.5l.8 2.1 2.2.9-2.2.8-.8 2.2-.9-2.2-2.1-.8 2.1-.9z"/>',
+  family: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"/><path d="M8.5 11.5h2l1-2 1.5 4 1-2h1.5"/>',
+  health: '<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>',
+  mind: '<path d="M12 20c-4.2 0-8-2.6-8-6.2 2.7 0 5.3 1.1 8 4.2 2.7-3.1 5.3-4.2 8-4.2 0 3.6-3.8 6.2-8 6.2z"/><path d="M12 18c-2-2-3.2-4.5-3.2-7.2S10 5.8 12 3.8c2 2 3.2 4.3 3.2 7S14 16 12 18z"/>',
+  travel: '<path d="M21.5 2.5 10.8 13.2"/><path d="M21.5 2.5 14.8 21l-4-7.8-7.8-4z"/>',
+  other: '<path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.8 2.8M15.9 15.9l2.8 2.8M5.3 18.7l2.8-2.8M15.9 8.1l2.8-2.8"/>',
+};
 const sph = S.bySphere.filter(([k, , n]) => n > 0);
 const maxS = Math.max(...sph.filter((s) => s[0] !== 'other').map((s) => s[2]));
 const spots = [[50, 46], [20, 26], [80, 26], [28, 76], [72, 78], [8, 58], [92, 56], [50, 12], [12, 90]];
@@ -591,7 +607,7 @@ $('#bubbles').innerHTML = sph.map(([k, l, n], i) => {
   const other = k === 'other';
   const size = other ? 150 : 90 + 150 * Math.sqrt(n / maxS); const [x, y] = other ? [88, 88] : spots[i % spots.length];
   return `<button class="bub rv ${k === 'other' ? 'dim' : ''}" data-sphere="${k}" style="width:${size}px;height:${size}px;left:calc(${x}% - ${size / 2}px);top:calc(${y}% - ${size / 2}px);animation-delay:${-i * 0.9}s">
-    <span><b>${n}</b><span>${esc(l)}</span></span></button>`;
+    <span>${SPH_ICON[k] ? `<span class="bi"><svg viewBox="0 0 24 24" aria-hidden="true">${SPH_ICON[k]}</svg></span>` : ''}<b>${n}</b><span>${esc(l)}</span></span></button>`;
 }).join('');
 $('#bubbles').onclick = (e) => { const b = e.target.closest('[data-sphere]'); if (b) { setFilter('sphere', b.dataset.sphere); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); } };
 
