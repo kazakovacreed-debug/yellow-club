@@ -942,6 +942,66 @@ const IGW={'Алёна Антипова':[38900,20,5307],'Динара Хисм�
  const tl=document.querySelectorAll('.tiles .tile');
  if(tl[1]){tl[1].querySelector('.n').textContent=sum+'+';tl[1].querySelector('.l').textContent='рилсов капитаны выложили в своих Instagram с 21 по 27 ноября';}
 })();
+/* Рейтинги наставников по показателям: полоски, фото, раскрытие с текстом (по ОС Айрата 27.11) */
+(function(){
+ document.querySelector('.howto')?.remove();
+ [...document.querySelectorAll('.box h3')].filter(h=>/Звёзды недели/.test(h.textContent)).forEach(h=>h.closest('.box').remove());
+ document.querySelectorAll('section.one').forEach(s=>{if(!s.children.length)s.remove();});
+ const pane=document.getElementById('p-mentors'); if(!pane) return;
+ const K=n=>n>=1e6?String(Math.round(n/1e5)/10).replace('.',',')+'M':n>=1e4?Math.round(n/1e3)+'K':n>=1e3?String(Math.round(n/100)/10).replace('.',',')+'K':String(n);
+ const P=[];
+ for(const n of MENT){
+  const el=document.getElementById('c-'+n.replace(/ /g,'-')); if(!el) continue;
+  const a=ADM[n],g=IGW[n]||[0,0,0];
+  const txt=[...el.querySelectorAll('.blk')].map(b=>({h:b.querySelector('.bh').textContent,p:b.querySelector('p').textContent})).filter(x=>x.p&&x.p!=='—');
+  const vids=[...el.querySelectorAll('.st')].find(s=>/на ОС/.test(s.textContent));
+  const tm=el.querySelector('.tm');
+  const dec=a[5]+a[7];
+  P.push({n,ava:el.querySelector('.ava').outerHTML,team:tm.textContent.split(' · ')[0],ig:tm.innerHTML.split(' · ').slice(1).join(' · '),
+   cases:a[4],fol:g[0],reels:typeof g[1]==='number'?g[1]:30,reelsT:String(g[1]),best:g[2],
+   norm:Math.round(a[2]*a[3]/100),part:a[3],normP:a[2],rank:a[0],
+   stay:dec?Math.round(100*a[5]/dec):0,x:a[5],s:a[7],y:a[6],vids:vids?parseInt(vids.querySelector('.v').textContent.replace(/\s/g,''))||0:0,txt});
+ }
+ const M=[
+  {k:'cases',t:'Кейсы',d:'Кейсы участников команды в админке клуба на 27.11.',v:p=>p.cases,f:p=>p.cases},
+  {k:'fol',t:'Подписчики',d:'Подписчики в Instagram капитана на 27.11 (у Алёны и Кристины — два аккаунта вместе).',v:p=>p.fol,f:p=>K(p.fol)},
+  {k:'reels',t:'Рилсы за неделю',d:'Сколько рилсов капитан выложил у себя в Instagram с 21 по 27 ноября.',v:p=>p.reels,f:p=>p.reelsT},
+  {k:'best',t:'Лучший рилс',d:'Просмотры самого сильного рилса капитана за неделю с 21.11.',v:p=>p.best,f:p=>p.best?K(p.best):'—'},
+  {k:'norm',t:'Снимают по норме',d:'Сколько человек в команде выполняют норму по видео (за 30 дней, админка на 27.11). Справа — из скольких участников.',v:p=>p.norm,f:p=>`${p.norm} <small>из ${p.part}</small>`},
+  {k:'stay',t:'Остались в клубе',d:'Из тех, у кого в ноябре закончился срок: сколько продлили (% от решивших). Админка на 27.11.',v:p=>p.stay,f:p=>`${p.stay}% <small>${p.x} из ${p.x+p.s}</small>`},
+  {k:'vids',t:'Ролики на ОС',d:'Сколько роликов участники прислали на обратную связь в чат команды за неделю (срез 25.11).',v:p=>p.vids,f:p=>p.vids}
+ ];
+ const st=document.createElement('style');
+ st.textContent=`.wrap>*,.pane,.rl,.mx{min-width:0}
+.mx{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px}.mx::-webkit-scrollbar{display:none}
+.mx button{flex:0 0 auto;font:700 13px var(--font);border:0;border-radius:999px;padding:9px 14px;background:#fff;color:var(--navy);cursor:pointer;box-shadow:0 4px 14px -10px rgba(11,8,56,.5)}
+.mx button[aria-pressed="true"]{background:var(--grad);color:#fff}
+.rl{background:var(--card);border-radius:22px;padding:14px 16px;display:grid;gap:2px}
+.rl .dsc{margin:0 0 8px;color:var(--muted);font-size:13px;line-height:1.4}
+.rr{display:grid;grid-template-columns:22px 44px minmax(0,1fr) minmax(70px,38%) 72px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F1E4E1;cursor:pointer}
+.rr:last-of-type{border-bottom:0}
+.rr .pos{font-weight:800;color:var(--muted);font-size:13px;text-align:right}
+.rr .ava{width:44px;height:44px;font-size:14px;border-width:2px}
+.rr .who b{display:block;font-size:15px;color:var(--navy);line-height:1.2}.rr .who span{font-size:12px;color:var(--muted)}
+.rr .bar{height:10px}.rr .bar i{background:var(--grad)}
+.rr .val{text-align:right;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;font-size:15px}.rr .val small{display:block;font-weight:600;color:var(--muted);font-size:11px}
+.rd{display:none;padding:4px 0 12px 76px;gap:8px}.rd.open{display:grid}
+.rd .tm{font-size:13px;color:var(--muted)}.rd .tm a{color:#7A2390;font-weight:600;text-decoration:none}
+@media (max-width:560px){.rr{grid-template-columns:18px 40px minmax(0,1fr) 64px;}.rr .bar{grid-column:3/5;grid-row:2}.rr .ava{width:40px;height:40px}.rd{padding-left:0}}`;
+ document.head.appendChild(st);
+ const box=document.createElement('div');
+ box.innerHTML=`<div class="mx" role="tablist">${M.map((m,i)=>`<button type="button" data-k="${m.k}" aria-pressed="${i==0}">${m.t}</button>`).join('')}</div><div class="rl"></div>`;
+ const grid=pane.querySelector('section.grid'); pane.querySelector('.box.cases')?.remove();
+ grid.replaceWith(box);
+ const rl=box.querySelector('.rl');
+ const det=p=>`<div class="tm">«${p.team.replace(/[«»]/g,'')}» · ${p.ig} · №${p.rank} из 126</div>`+p.txt.map(t=>`<div class="blk"><div class="bh">${t.h}</div><p>${t.p}</p></div>`).join('');
+ function draw(k){const m=M.find(x=>x.k===k);const L=[...P].sort((a,b)=>m.v(b)-m.v(a));const mx=Math.max(1,...L.map(m.v));
+  rl.innerHTML=`<p class="dsc">${m.d} Нажмите на человека — откроется подробно.</p>`+L.map((p,i)=>`<div class="rr" data-i="${P.indexOf(p)}"><div class="pos">${i+1}</div>${p.ava}<div class="who"><b>${p.n}</b><span>${p.team}</span></div><div class="bar"><i style="width:${Math.round(100*m.v(p)/mx)}%"></i></div><div class="val">${m.f(p)}</div></div><div class="rd">${det(p)}</div>`).join('');
+  box.querySelectorAll('.mx button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));}
+ box.querySelector('.mx').addEventListener('click',e=>{const b=e.target.closest('button');if(b)draw(b.dataset.k);});
+ rl.addEventListener('click',e=>{const r=e.target.closest('.rr');if(r)r.nextElementSibling.classList.toggle('open');});
+ draw('cases');
+})();
 const IDS=["mentors","captains","ivan"];
 function showTab(id){ if(!IDS.includes(id)) id=IDS[0];
   IDS.forEach(t=>{document.getElementById('p-'+t).hidden=t!==id; document.getElementById('b-'+t).setAttribute('aria-selected',t===id);}); }
