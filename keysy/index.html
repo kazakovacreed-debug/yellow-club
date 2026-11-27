@@ -277,31 +277,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 
 <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
 
-<section id="path-s"><div class="wrap">
-  <div class="eyebrow rv">Как это работает</div>
-  <h2 class="rv">от желания до <em>кейса</em></h2>
-    <div class="flow rv" id="flow">
-    <svg id="flow-lines" aria-hidden="true"></svg>
-    <div class="flow-grid">
-      <div class="node-you" data-node="you">
-        <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg></div>
-        <b>ты</b><span>хочешь стать блогером: подписчики, заявки, клиенты</span>
-      </div>
-      <div class="node-club" data-node="club"><canvas id="club-orb" width="480" height="480" aria-label="Жёлтый клуб"></canvas><span>среда, где блог растёт</span></div>
-      <div class="pillars">
-        <div class="pill" data-node="p1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2"/><path d="M8 7h6M8 11h6"/></svg><span>Уроки Айрата и форматы<small>задания недели: до/после, карусель, лайфхак</small></span></div>
-        <div class="pill" data-node="p2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 20c0-2.2 1.3-4 3-4.6"/></svg><span>Команда и капитан<small>ритм, норма видео, поддержка каждый день</small></span></div>
-        <div class="pill" data-node="p3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/></svg><span>Разборы и обратная связь<small>эфиры Айрата по воскресеньям, ОС в команде</small></span></div>
-        <div class="pill" data-node="p4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg><span>Айра — ИИ-ассистент<small>темы, заголовки, сценарии под твою нишу</small></span></div>
-      </div>
-      <div class="outcomes">
-        <div><button class="out" data-node="o1" data-go="ladder-s"><b>твой кейс</b><span>подписчики · заявки · клиенты</span><em id="out-cases"></em></button><div class="out-note">историй уже собрано</div></div>
-        <div><button class="out" data-node="o2" data-go="ladder-s"><b>масштаб</b><span>от 10 000 подписчиков · 100К ₽ в месяц</span><em id="out-scale"></em></button><div class="out-note">ты — лидер, капитан, наставник</div></div>
-      </div>
-    </div>
-  </div>
-</div></section>
-
 <section class="mission" id="mission-s" aria-labelledby="h-mission">
   <canvas id="dust" aria-hidden="true"></canvas>
   <div id="pills"></div>
@@ -539,66 +514,6 @@ function openCase(c) {
 }
 $('#dlg .x').onclick = () => $('#dlg').close();
 $('#dlg').addEventListener('click', (e) => { if (e.target === $('#dlg')) $('#dlg').close(); });
-
-/* ---------- Путь: линии с бегущими точками и шар клуба ---------- */
-$('#out-cases').textContent = fmt(S.cases);
-$('#out-scale').textContent = fmt(D.cases.filter((c) => (c.categories || []).length).length);
-document.querySelectorAll('.out[data-go]').forEach((b) => b.onclick = () => document.getElementById(b.dataset.go).scrollIntoView({ behavior: 'smooth' }));
-const flow = $('#flow'), svgL = $('#flow-lines');
-const LINKS = [['you', 'club'], ['club', 'p1'], ['club', 'p2'], ['club', 'p3'], ['club', 'p4'], ['p1', 'o1'], ['p2', 'o1'], ['p3', 'o2'], ['p4', 'o2'], ['o1', 'o2']];
-let flowPaths = [], dots = [];
-function layoutFlow() {
-  const fb = flow.getBoundingClientRect();
-  const box = (n) => { const r = document.querySelector(`[data-node="${n}"]`).getBoundingClientRect(); return { l: r.left - fb.left, r: r.right - fb.left, t: r.top - fb.top, b: r.bottom - fb.top, cx: (r.left + r.right) / 2 - fb.left, cy: (r.top + r.bottom) / 2 - fb.top }; };
-  const vertical = innerWidth < 900;
-  let d = '';
-  const links = vertical ? [['you', 'club'], ['club', 'p1'], ['p1', 'p2'], ['p2', 'p3'], ['p3', 'p4'], ['p4', 'o1'], ['o1', 'o2']] : LINKS;
-  flowPaths = links.map(([a, b]) => {
-    const A = box(a), B = box(b);
-    if (vertical) return `M${A.cx},${A.b} L${B.cx},${B.t}`;
-    if (a === 'o1' && b === 'o2') return `M${A.cx},${A.b} L${B.cx},${B.t}`;
-    const x1 = A.r, y1 = A.cy, x2 = B.l, y2 = B.cy, mx = (x1 + x2) / 2;
-    return `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;
-  }).filter(Boolean);
-  svgL.setAttribute('viewBox', `0 0 ${fb.width} ${fb.height}`);
-  svgL.innerHTML = flowPaths.map((p) => `<path d="${p}"/>`).join('') + flowPaths.map(() => '<circle r="3.2"/>').join('');
-  const els = [...svgL.querySelectorAll('path')], cs = [...svgL.querySelectorAll('circle')];
-  dots = els.map((el, i) => ({ el, c: cs[i], len: el.getTotalLength(), off: Math.random() }));
-}
-function animateFlow(t) {
-  for (const d of dots) { const k = ((t / 2600) + d.off) % 1; const p = d.el.getPointAtLength(k * d.len); d.c.setAttribute('cx', p.x); d.c.setAttribute('cy', p.y); }
-  if (!reduce) requestAnimationFrame(animateFlow);
-}
-addEventListener('resize', () => layoutFlow());
-requestAnimationFrame(() => { layoutFlow(); requestAnimationFrame(animateFlow); });
-setTimeout(layoutFlow, 1200); // после загрузки шрифтов размеры меняются
-
-// Шар «Жёлтый клуб» из светящихся частиц
-(() => {
-  const c = $('#club-orb'), g = c.getContext('2d'), P = [], n = 700;
-  for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = 2.39996 * i; P.push([Math.cos(th) * r, y, Math.sin(th) * r]); }
-  function frame(t) {
-    const W = c.width, H = c.height, R = W * 0.36, a = t / 5000, ca = Math.cos(a), sa = Math.sin(a);
-    g.clearRect(0, 0, W, H);
-    const glow = g.createRadialGradient(W / 2, H / 2, R * 0.2, W / 2, H / 2, R * 1.45);
-    glow.addColorStop(0, 'rgba(255,210,31,.22)'); glow.addColorStop(1, 'rgba(255,210,31,0)');
-    g.fillStyle = glow; g.fillRect(0, 0, W, H);
-    for (const [x, y, z] of P) {
-      const wob = 1 + 0.06 * Math.sin(t / 700 + y * 6 + x * 4);
-      const x1 = (x * ca - z * sa) * wob, z1 = (x * sa + z * ca) * wob, y1 = y * wob;
-      const f = 1.4 / (2.4 - z1), px = W / 2 + x1 * R * f, py = H / 2 + y1 * R * f;
-      g.globalAlpha = 0.25 + 0.75 * ((z1 + 1) / 2);
-      g.fillStyle = z1 > 0 ? '#FFE680' : '#FFB000';
-      g.beginPath(); g.arc(px, py, 1.6 + z1 * 0.9, 0, 7); g.fill();
-    }
-    g.globalAlpha = 1; g.fillStyle = '#FFD21F'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.shadowColor = 'rgba(255,210,31,.9)'; g.shadowBlur = 24;
-    g.font = `900 ${W * 0.11}px Unbounded, sans-serif`; g.fillText('ЖЁЛТЫЙ', W / 2, H / 2 - W * 0.06);
-    g.fillText('КЛУБ', W / 2, H / 2 + W * 0.07); g.shadowBlur = 0;
-    if (!reduce) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-})();
 
 /* ---------- Бегущая строка ---------- */
 const best = D.cases.filter((c) => c.badge && (c.categories || []).length).slice(0, 20);
