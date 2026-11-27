@@ -656,7 +656,7 @@ function openAcc(a) {
   $('#dlg-body').innerHTML = `<div class="eyebrow">${a.fi ? (a.fi.src === 'ig' ? kfmt(a.fi.n) + ' подписчиков · Instagram' + (a.checked ? ' на ' + a.checked.split('-').reverse().join('.') : '') : kfmt(a.fi.n) + (a.fi.src === 'text' ? '+' : '') + ' подписчиков · со слов участника') : 'подписчики уточняются'}</div>
     <div class="dlg-head"><span class="orb">${a.photo ? `<img src="${esc(a.photo)}" alt="">` : esc(initials(a.igName || a.name) || a.handle[0].toUpperCase())}</span><div><h3>@${esc(a.handle)}</h3>${a.igName ? `<b>${esc(a.igName)}</b>` : ''}</div></div>
     ${a.bio || a.category ? `<p>${esc([a.category, a.bio].filter(Boolean).join('\n'))}</p>` : a.niche || a.name ? `<p>${esc([a.name, a.niche].filter(Boolean).join(' · '))}</p>` : ''}
-    ${a.team ? `<p>Команда «${esc(a.team)}» · капитан ${esc(a.captain)}</p>` : ''}
+    ${a.team ? `<p>Команда «${esc(a.team)}» · капитан ${esc(a.captain)}</p>` : a.captain ? `<p>Капитан: ${esc(a.captain)}${a.src ? ` · ${esc(a.src)}` : ''}</p>` : ''}
     <p><a class="btn" style="display:inline-block;text-decoration:none" href="https://www.instagram.com/${esc(a.handle)}/" target="_blank" rel="noopener">Открыть Instagram</a></p>
     <div style="display:grid;gap:8px;margin-top:10px">${a.cs.map((c, i) => `<button class="case" data-ci="${i}" style="text-align:left;font:inherit;width:100%">${c.badge ? `<div class="badge">${esc(c.badge)}</div>` : ''}<h3 style="font-size:13px">${esc(c.title || c.result || '')}</h3></button>`).join('')}</div>`;
   $('#dlg').showModal();
