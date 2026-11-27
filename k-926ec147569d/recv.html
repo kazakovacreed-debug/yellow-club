@@ -3,6 +3,7 @@
 <script>
 addEventListener('message', (e) => {
   if (e.origin !== 'https://www.instagram.com' || !e.data || !e.data.name) return;
+  try { new BroadcastChannel('yc').postMessage(e.data); } catch (_) {}
   const b = new Blob([e.data.body], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = e.data.name; document.body.appendChild(a); a.click();
   document.getElementById('s').textContent = 'сохранено ' + e.data.name + ' ' + b.size;
