@@ -238,10 +238,11 @@ input[type=search]{flex:1 1 280px;min-width:0;font:inherit;color:var(--ink);back
 .mil .ch a{font-size:13px;font-weight:800;padding:6px 12px;border-radius:999px;background:var(--y);color:var(--ink);text-decoration:none}
 .mil .ch a:hover{background:var(--ink);color:var(--y)}.mil .warn{font-size:12px;color:var(--mute);margin-top:6px}
 .filters select{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:10px 14px;font:inherit;max-width:100%}
-.acc{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:24px}
+.acc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:16px}
 .acc a{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:18px;background:var(--card);border:1px solid transparent;box-shadow:var(--sh);color:var(--ink);text-decoration:none;min-width:0;transition:border-color .25s}
 .acc a:hover{border-color:var(--red)}
-.acc .orb{width:38px;height:38px;font-size:11px}
+.acc .orb{width:52px;height:52px;font-size:13px}
+.acc .fol{flex:none;text-align:right;font:900 17px/1 var(--display);color:var(--red)}.acc .fol i{display:block;font:600 10px/1.4 var(--text);font-style:normal;color:var(--mute)}
 .acc b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acc small{display:block;color:var(--mute);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
@@ -341,7 +342,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 <section id="acc-s" style="padding-top:0"><div class="wrap">
   <div class="eyebrow rv">Растём вместе</div>
   <h2 class="rv">аккаунты, которые <em>растут</em> с нами</h2>
-    <div class="acc" id="acc"></div>
+    <div class="row" id="acc-tabs" style="margin-top:24px"></div>
+  <div class="acc" id="acc"></div>
   <div class="more"><button class="btn" id="more-acc">Показать ещё</button></div>
 </div></section>
 
@@ -607,10 +609,12 @@ $('#bubbles').onclick = (e) => { const b = e.target.closest('[data-sphere]'); if
 
 /* ---------- Галерея ---------- */
 const st = { q: '', cat: '', sphere: '', cap: '' };
+const folOf = {}; D.accounts.forEach((a) => { if (a.followers != null) folOf[a.handle] = a.followers; });
+const fol = (c) => Math.max(-1, ...(c.instagram || []).map((h) => folOf[h] ?? -1));
 const TIERS = [
-  ['t1', 'до 10 000 подписчиков', (c) => !(c.categories || []).some((k) => /^subs/.test(k))],
-  ['t2', '10 000 – 100 000', (c) => (c.categories || []).includes('subs10k') && !(c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
-  ['t3', 'от 100 000', (c) => (c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
+  ['t1', 'до 10 000 подписчиков', (c) => fol(c) >= 0 ? fol(c) < 1e4 : !(c.categories || []).some((k) => /^subs/.test(k))],
+  ['t2', '10 000 – 100 000', (c) => fol(c) >= 0 ? fol(c) >= 1e4 && fol(c) < 1e5 : (c.categories || []).includes('subs10k') && !(c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
+  ['t3', 'от 100 000', (c) => fol(c) >= 0 ? fol(c) >= 1e5 : (c.categories || []).some((k) => k === 'subs100k' || k === 'subs1m')],
 ];
 const shown = { t1: 8, t2: 8, t3: 8 };
 function setFilter(f, v) { st[f] = v; if (f === 'cap') { const sel = $('#f-cap'); if (sel) sel.value = v; } render(true); }
@@ -672,12 +676,35 @@ const mln = (v) => (v / 1e6).toFixed(1).replace('.', ',') + ' млн';
   draw();
 }
 
-/* ---------- Растём вместе ---------- */
-let accShown = 36;
+/* ---------- Растём вместе: аккаунты по числу подписчиков ---------- */
+const kfmt = (n) => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',').replace(',0', '') + ' млн' : n >= 1e4 ? Math.round(n / 1e3) + 'К' : n >= 1e3 ? (n / 1e3).toFixed(1).replace('.', ',').replace(',0', '') + 'К' : String(n);
+const casesByIg = {};
+D.cases.forEach((c) => (c.instagram || []).forEach((h) => (casesByIg[h] = casesByIg[h] || []).push(c)));
+function segOf(a) {
+  if (a.followers != null) return a.followers >= 1e5 ? 't3' : a.followers >= 1e4 ? 't2' : 't1';
+  const cats = (casesByIg[a.handle] || []).flatMap((c) => c.categories || []);   // пока нет данных из Instagram — по тексту кейса
+  if (cats.some((k) => k === 'subs100k' || k === 'subs1m')) return 't3';
+  if (cats.includes('subs10k')) return 't2';
+  return 'unk';
+}
+const SEG = [['t1', 'до 10 000'], ['t2', '10 000 – 100 000'], ['t3', 'от 100 000'], ['unk', 'ещё не проверены']];
+const accBy = { t1: [], t2: [], t3: [], unk: [] };
+D.accounts.forEach((a) => accBy[segOf(a)].push(a));
+Object.values(accBy).forEach((l) => l.sort((x, y) => (y.followers ?? -1) - (x.followers ?? -1) || !!y.photo - !!x.photo));
+let accSeg = SEG.find(([k]) => k !== 'unk' && accBy[k].length)?.[0] || 'unk', accShown = 36;
+$('#acc-tabs').innerHTML = SEG.filter(([k]) => accBy[k].length).map(([k, l]) => `<button class="chip" data-seg="${k}" aria-pressed="${k === accSeg}">${l} · ${accBy[k].length}</button>`).join('');
+$('#acc-tabs').onclick = (e) => { const b = e.target.closest('[data-seg]'); if (!b) return; accSeg = b.dataset.seg; accShown = 36;
+  document.querySelectorAll('[data-seg]').forEach((x) => x.setAttribute('aria-pressed', x === b)); renderAcc(); };
 function renderAcc() {
-  $('#acc').innerHTML = D.accounts.slice().sort((x, y) => !!y.photo - !!x.photo).slice(0, accShown).map((a) => `<a href="https://www.instagram.com/${esc(a.handle)}/" target="_blank" rel="noopener">
-    <span class="orb">${a.photo ? `<img src="${esc(a.photo)}" alt="" loading="lazy">` : esc(initials(a.name) || a.handle[0].toUpperCase())}</span><span style="min-width:0"><b>@${esc(a.handle)}</b><small>${esc([a.name, a.niche].filter(Boolean).join(' · ') || 'участник клуба')}</small></span></a>`).join('');
-  $('#more-acc').hidden = D.accounts.length <= accShown;
+  const list = accBy[accSeg];
+  $('#acc').innerHTML = list.slice(0, accShown).map((a) => {
+    const niche = a.category || a.bio || [a.name, a.niche].filter(Boolean).join(' · ') || 'участник клуба';
+    return `<a href="https://www.instagram.com/${esc(a.handle)}/" target="_blank" rel="noopener">
+    <span class="orb">${a.photo ? `<img src="${esc(a.photo)}" alt="" loading="lazy">` : esc(initials(a.igName || a.name) || a.handle[0].toUpperCase())}</span>
+    <span style="min-width:0;flex:1"><b>@${esc(a.handle)}</b><small>${esc(niche)}</small></span>
+    ${a.followers != null ? `<span class="fol">${kfmt(a.followers)}<i>подписчиков</i></span>` : ''}</a>`;
+  }).join('');
+  $('#more-acc').hidden = list.length <= accShown;
 }
 $('#more-acc').onclick = () => { accShown += 36; renderAcc(); };
 renderAcc();
