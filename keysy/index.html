@@ -304,12 +304,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 </div></section>
 
 
-<section id="tree-s" style="padding-top:0"><div class="wrap">
-  <div class="eyebrow rv">Матрёшка</div>
-  <h2 class="rv">кто кого <em>вырастил</em></h2>
-  <p class="lead rv">Наставник → капитан → кейсы. Нажми, чтобы раскрыть.</p>
-  <div class="tree" id="tree"></div>
-</div></section>
 
 <section id="reels-s" style="padding-top:0"><div class="wrap">
   <div class="eyebrow rv">Рилсы-миллионники</div>
@@ -656,21 +650,6 @@ $('#tiers').addEventListener('click', (e) => {
 });
 $('#tiers').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const a = e.target.closest('.case'); if (a) openCase(current[+a.dataset.i]); } });
 render(true);
-
-/* ---------- Матрёшка ---------- */
-{
-  const byId = Object.fromEntries(D.cases.map((c) => [c.id, c]));
-  const photoOf = Object.fromEntries(D.people.filter((p) => p.photo).map((p) => [p.name, p.photo]));
-  const ph = (name) => photoOf[name] ? `<span class="ph"><img src="${esc(photoOf[name])}" alt="" loading="lazy"></span>` : `<span class="ph">${esc(initials(name) || '★')}</span>`;
-  const li = (id) => { const c = byId[id]; return c ? `<li><button data-id="${esc(id)}">${c.badge ? `<b>${esc(c.badge)}</b>` : ''}<span>${esc((c.title || c.result || '').slice(0, 90))}</span></button></li>` : ''; };
-  $('#tree').innerHTML = D.tree.mentors.map((m) => `<details><summary>${m.name === 'Наставник не указан' ? '<span class="ph">?</span>' : ph(m.name)}<span class="nm"><b>${esc(m.name === 'Наставник не указан' ? 'наставник уточняется' : m.name)}</b><small>${m.teams.length} ${plural(m.teams.length, 'команда', 'команды', 'команд')}</small></span><span class="cnt">${fmt(m.count)}</span></summary>
-    ${m.teams.map((t) => `<details><summary>${ph(t.captain)}<span class="nm"><b>${esc(t.team.replace(/^команда /, ''))}</b><small>капитан ${esc(t.captain)}</small></span><span class="cnt">${t.cases.length}</span></summary><ul data-ids="${esc(t.cases.join(','))}">${t.cases.slice(0, 8).map(li).join('')}</ul>${t.cases.length > 8 ? `<button class="all" data-cap="${esc(t.captain)}">Все ${t.cases.length} кейсов →</button>` : ''}</details>`).join('')}
-  </details>`).join('');
-  $('#tree').onclick = (e) => {
-    const b = e.target.closest('[data-id]'); if (b) return openCase(byId[b.dataset.id]);
-    const a = e.target.closest('[data-cap]'); if (a) { setFilter('cap', a.dataset.cap); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); }
-  };
-}
 
 /* ---------- Рилсы-миллионники ---------- */
 const mln = (v) => (v / 1e6).toFixed(1).replace('.', ',') + ' млн';
