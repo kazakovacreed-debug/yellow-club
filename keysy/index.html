@@ -288,13 +288,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
     <div class="bubbles" id="bubbles"></div>
 </div></section>
 
-<section id="pyr-s" style="padding-top:0"><div class="wrap">
-  <div class="eyebrow rv">Кто растит</div>
-  <h2 class="rv">пирамида <em>клуба</em></h2>
-  
-  <div class="pyr" id="pyr"></div>
-  <p class="note" id="pyr-note"></p>
-</div></section>
 
 <section id="tree-s" style="padding-top:0"><div class="wrap">
   <div class="eyebrow rv">Матрёшка</div>
@@ -595,19 +588,6 @@ $('#bubbles').innerHTML = sph.map(([k, l, n], i) => {
 }).join('');
 $('#bubbles').onclick = (e) => { const b = e.target.closest('[data-sphere]'); if (b) { setFilter('sphere', b.dataset.sphere); $('#cases-s').scrollIntoView({ behavior: 'smooth' }); } };
 
-/* ---------- Пирамида ---------- */
-const mentors = D.tree.mentors.filter((m) => m.name !== 'Наставник не указан');
-const lv = [
-  ['', 'Миссия', D.mission.title, fmt(D.mission.goal), true],
-  ['logo-yellow-club.png', 'Айрат и Жёлтый клуб', 'все кейсы клуба: разборы, марафон, команды', fmt(S.cases)],
-  ['05-mentor.png', 'Наставники', `${D.people.filter((p) => p.role === 'наставник').length} наставников ведут капитанов`, fmt(mentors.reduce((s, m) => s + m.count, 0))],
-  ['04-captain.png', 'Капитаны и команды', `${D.people.length} капитанов в отчёте, ${S.teams} команд уже с кейсами`, fmt(S.attributed)],
-  ['01-member.png', 'Участники', 'Instagram-аккаунты, которые растут с клубом', fmt(S.accounts)],
-];
-$('#pyr').innerHTML = lv.map(([ic, t, d, n, top], i) => `<div class="lvl rv ${top ? 'top' : ''}" style="max-width:${48 + i * 13}%;min-width:min(100%,320px)">
-  ${ic ? `<img src="${ic}" alt="">` : '<span style="font-size:32px">💛</span>'}<span><span class="t">${esc(t)}</span><br><span class="d">${esc(d)}</span></span><span class="n">${n}</span></div>`).join('');
-
-
 /* ---------- Галерея ---------- */
 const st = { q: '', cat: '', sphere: '', shown: 24 };
 $('#f-cat').innerHTML = `<button class="chip" data-f="cat" data-v="" aria-pressed="true">Все кейсы</button>` + [...catOrder, 'none'].filter((k) => CAT[k].n).map((k) => `<button class="chip" data-f="cat" data-v="${k}" aria-pressed="false">${CAT[k].ic} ${esc(CAT[k].short)} · ${CAT[k].n}</button>`).join('');
@@ -690,8 +670,8 @@ const mln = (v) => (v / 1e6).toFixed(1).replace('.', ',') + ' млн';
 /* ---------- Растём вместе ---------- */
 let accShown = 36;
 function renderAcc() {
-  $('#acc').innerHTML = D.accounts.slice(0, accShown).map((a) => `<a href="https://www.instagram.com/${esc(a.handle)}/" target="_blank" rel="noopener">
-    <span class="orb">${esc(initials(a.name) || a.handle[0].toUpperCase())}</span><span style="min-width:0"><b>@${esc(a.handle)}</b><small>${esc([a.name, a.niche].filter(Boolean).join(' · ') || 'участник клуба')}</small></span></a>`).join('');
+  $('#acc').innerHTML = D.accounts.slice().sort((x, y) => !!y.photo - !!x.photo).slice(0, accShown).map((a) => `<a href="https://www.instagram.com/${esc(a.handle)}/" target="_blank" rel="noopener">
+    <span class="orb">${a.photo ? `<img src="${esc(a.photo)}" alt="" loading="lazy">` : esc(initials(a.name) || a.handle[0].toUpperCase())}</span><span style="min-width:0"><b>@${esc(a.handle)}</b><small>${esc([a.name, a.niche].filter(Boolean).join(' · ') || 'участник клуба')}</small></span></a>`).join('');
   $('#more-acc').hidden = D.accounts.length <= accShown;
 }
 $('#more-acc').onclick = () => { accShown += 36; renderAcc(); };

@@ -202,7 +202,7 @@ function sync() {
 
 /* плитка */
 // фото только по полному имени (имя + фамилия), чтобы не поставить чужое лицо
-const hasPhoto = (c) => c.name && c.name.trim().split(/\s+/).length >= 2 && !!photoOf[c.name];
+const hasPhoto = (c) => (c.photo && !c.photoRemote) || (c.name && c.name.trim().split(/\s+/).length >= 2 && !!photoOf[c.name]);
 const topCat = (c) => (c.categories || []).slice().sort((a, b) => rank[a] - rank[b])[0];
 const score = (c) => (topCat(c) ? 10 - rank[topCat(c)] : 0) * 10 + (c.badge ? 3 : 0) + (hasPhoto(c) ? 2 : 0);
 let current = [];
@@ -212,7 +212,7 @@ function render(reset) {
     .sort((a, b) => score(b) - score(a));
   $('#found').textContent = `${fmt(current.length)} ${plural(current.length, 'история', 'истории', 'историй')}${st.cap ? ' · ' + st.cap : ''}`;
   $('#wall').innerHTML = current.slice(0, st.shown).map((c, i) => {
-    const ph = hasPhoto(c) ? img(c.name) : '';
+    const ph = c.photo && !c.photoRemote ? `<img src="${esc(c.photo)}" alt="" loading="lazy">` : hasPhoto(c) ? img(c.name) : '';
     const big = i % 9 === 0 && i < st.shown - 3;
     const num = c.badge || (c.reels ? mln(c.reels[0].views || 1e6) : '★');
     return `<button class="tile ${big ? 'big' : ''} g${(i * 7) % 5}" data-i="${i}" style="animation-delay:${(i % 24) * 25}ms">${ph}
