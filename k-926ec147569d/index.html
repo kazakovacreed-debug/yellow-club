@@ -601,7 +601,7 @@ $('#bubbles').onclick = (e) => { const b = e.target.closest('[data-sphere]'); if
 
 /* ---------- Кейсы клуба: аккаунты по подписчикам ---------- */
 const st = { q: '', cat: '', sphere: '', cap: '' };
-const kfmt = (n) => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',').replace(',0', '') + ' млн' : n >= 1e4 ? Math.round(n / 1e3) + 'К' : n >= 1e3 ? (n / 1e3).toFixed(1).replace('.', ',').replace(',0', '') + 'К' : String(n);
+const kfmt = (n) => n >= 1e6 ? (Math.floor(n / 1e5) / 10).toFixed(1).replace('.', ',').replace(',0', '') + ' млн' : n >= 1e4 ? Math.floor(n / 1e3) + 'К' : n >= 1e3 ? (Math.floor(n / 100) / 10).toFixed(1).replace('.', ',').replace(',0', '') + 'К' : String(n);
 const casesByIg = {};
 D.cases.forEach((c) => (c.instagram || []).forEach((h) => (casesByIg[h] = casesByIg[h] || []).push(c)));
 // подписчики: из Instagram, иначе «со слов участника», иначе по тексту кейса (только порог)
