@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-<div class="draft">Админка — на 27.11 11:45 МСК (место, участники, % с нормой, кейсы, продления) · Instagram — 27.11 12:10 МСК (рилсы с 21.11) · чаты — срез 25.11 · «—» = нет данных</div>
+<div class="draft">Админка — на 27.11 11:45 МСК (место, участники, % с нормой, кейсы, решения идти дальше) · Instagram — 27.11 12:10 МСК (рилсы с 21.11) · чаты — срез 25.11 · «—» = нет данных</div>
 <div class="wrap">
 <header>
   <div>
@@ -963,7 +963,7 @@ Object.assign(IGC,{"olga_dzhivana": ["51,7K", "Тело и душа: 18 лет �
   {k:'reels',t:'Выложено Reels за неделю',d:'Сколько рилсов капитан выложил у себя в Instagram с 21 по 27 ноября.',v:p=>p.reels,f:p=>p.reelsT},
   {k:'best',t:'Лучший Reels',d:'Просмотры самого сильного рилса капитана за неделю с 21.11.',v:p=>p.best,f:p=>p.best?K(p.best):'—'},
   {k:'norm',t:'Активность в команде',d:'Активность в команде: сколько человек выполняют норму по видео (за 30 дней, админка на 27.11). Справа — из скольких участников.',v:p=>p.norm,f:p=>`${p.norm} <small>из ${p.part}</small>`},
-  {k:'stay',t:'Остались в клубе',d:'Из тех, у кого в ноябре закончился срок: сколько продлили (% от решивших). Админка на 27.11.',v:p=>p.stay,f:p=>`${p.stay}% <small>${p.x} из ${p.x+p.s}</small>`},
+  {k:'stay',t:'Идут дальше к цели',d:'Из тех, у кого в ноябре закончился срок: сколько приняли решение идти дальше к своим целям и помогать другим (% от тех, кто уже решил). Админка на 27.11.',v:p=>p.stay,f:p=>`${p.stay}% <small>${p.x} из ${p.x+p.s}</small>`},
   {k:'vids',t:'Ролики на ОС',d:'Сколько роликов участники прислали на обратную связь в чат команды за неделю (срез 25.11).',v:p=>p.vids,f:p=>p.vids}
  ];
  if(!document.getElementById('rkst')){st.textContent=`.wrap>*,.pane,.rl,.mx{min-width:0}
@@ -1012,7 +1012,7 @@ Object.assign(IGC,{"olga_dzhivana": ["51,7K", "Тело и душа: 18 лет �
    return `<div class="blk"><div class="bh">🔥 Лучший Reels недели${b[2]?` — ${K(b[2])} просмотров`:' (просмотры скрыты)'}</div><div class="emb" data-code="${b[0]}"></div><p><a href="https://www.instagram.com/reel/${b[0]}/" target="_blank" rel="noopener">Открыть в Instagram @${b[1]} →</a></p></div>`+ig;}
   if(k==='norm'){const A=ACT[p.n]||[[],[]];return `<div class="blk"><div class="bh">🏃 Активность: ${p.norm} из ${p.part} выполняют норму по видео (админка, 30 дней)</div><p style="font-size:13px;color:var(--muted)">Ниже — все участники команды из админки по баллам бота-счётчика роликов. Нажмите на ник — откроется Telegram.</p></div>`+grp(`✅ Активные — есть баллы (${A[0].length})`,A[0].map(([n,b])=>tg(n,b+' баллов')),'act')+grp(`💤 Неактивные — 0 баллов (${A[1].length})`,A[1].map(n=>tg(n,'')),'nact')+ig;}
   if(k==='stay'){const R=REN[p.n]||[];const f=s=>R.filter(x=>x[1]===s).map(x=>tg(x[0].startsWith('@')?x[0]:'~'+x[0],''));
-   return grp(`✅ Остались — продлили (${f('P').length})`,f('P'),'act')+grp(`❌ Слились (${f('S').length})`,f('S'),'nact')+grp(`⏳ Ещё решают (${f('W').length+f('Z').length})`,[...f('W'),...f('Z')],'')+ig;}
+   return grp(`✅ Приняли решение идти дальше к цели (${f('P').length})`,f('P'),'act')+grp(`❌ Слились (${f('S').length})`,f('S'),'nact')+grp(`⏳ Ещё решают (${f('W').length+f('Z').length})`,[...f('W'),...f('Z')],'')+ig;}
   return ig;};
  function draw(k){const m=M.find(x=>x.k===k);const L=[...P].sort((a,b)=>m.v(b)-m.v(a));const mx=Math.max(1,...L.map(m.v));
   rl.innerHTML=`<p class="dsc">${m.d} ${k==='vids'?'':'Нажмите на человека — откроется подробно.'}</p>`+L.map((p,i)=>`<div class="rr${k==='vids'?' nc':''}" data-i="${P.indexOf(p)}"><div class="pos">${i+1}</div>${p.ava}<div class="who"><b>${p.n}</b><span>${p.team}</span></div><div class="bar"><i style="width:${Math.round(100*m.v(p)/mx)}%"></i></div><div class="val">${m.f(p)}</div></div><div class="rd${k==='cases'&&i===0?' open':''}">${det(p,k)}</div>`).join('');
