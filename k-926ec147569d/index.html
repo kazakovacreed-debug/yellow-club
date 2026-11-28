@@ -613,7 +613,7 @@ function folInfo(a) {
   return t ? { n: t, src: 'text' } : null;
 }
 const TIERS = [['t1', '3 000 – 10 000', 3e3, 1e4], ['t2', '10 000 – 100 000', 1e4, 1e5], ['t3', '100 000 – 1 млн', 1e5, Infinity]];
-const shown = { t1: 12, t2: 12, t3: 12 };
+const shown = { t1: 1e9, t2: 1e9, t3: 1e9 };
 const ACC = D.accounts.map((a) => ({ ...a, fi: folInfo(a), cs: casesByIg[a.handle] || [] }));
 function setFilter(f, v) { st[f] = v; render(true); }
 $('#q').oninput = (e) => { st.q = e.target.value.trim().toLowerCase(); render(true); };
@@ -632,7 +632,7 @@ function acard(a, i, r) {
 }
 let accCur = [];
 function render(reset) {
-  if (reset) Object.keys(shown).forEach((k) => (shown[k] = 12));
+  if (reset) Object.keys(shown).forEach((k) => (shown[k] = 1e9));
   accCur = accList();
   const lab = { cat: (v) => CAT[v]?.short, sphere: (v) => SPHERE[v]?.label, cap: (v) => 'капитан ' + v };
   $('#active').innerHTML = ['cat', 'sphere', 'cap'].filter((f) => st[f]).map((f) => `<button class="act" data-clear="${f}">${esc(lab[f](st[f]))} ×</button>`).join('');
