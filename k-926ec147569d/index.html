@@ -55,10 +55,10 @@ section{padding-block:clamp(56px,8vw,110px)}
 .hero h1{text-shadow:0 4px 30px rgba(70,8,38,.55);font:900 clamp(40px,6vw,92px)/.92 var(--display);text-transform:lowercase;letter-spacing:-.03em;margin:16px 0 22px;max-width:9.5ch;text-wrap:balance}
 .hero h1 span{color:var(--y);text-shadow:var(--glow)}
 .hero .lead{max-width:46ch}
-.hero-row{display:flex;gap:28px;flex-wrap:wrap;align-items:end;margin-top:30px}
+.hero-row{display:flex;gap:14px;flex-wrap:wrap;align-items:end;margin-top:30px}
 .big-count{font:900 clamp(44px,7vw,96px)/1 var(--display);color:var(--y);font-variant-numeric:tabular-nums;text-shadow:var(--glow)}
 .big-count small{display:block;font:600 13px/1.3 var(--text);color:rgba(255,247,240,.7);letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
-.hint{font-size:13px;color:rgba(255,247,240,.65)}
+.hint{font:500 14px/1.4 var(--text);color:rgba(255,247,240,.7);flex-basis:100%}
 @media (min-width:700px){.hero-in{margin:0;max-width:none;padding-left:max(28px,6vw)}.hero-in>*{max-width:min(48vw,620px)}.hero h1{font-size:clamp(40px,5.2vw,84px)}}
 .spin-hint{position:absolute;z-index:2;left:72%;top:calc(47% + min(22vw,40vh) + 26px);transform:translateX(-50%);font:600 12px/1 var(--text);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,247,240,.6);pointer-events:none}
 @media (max-width:699px){.spin-hint{left:50%;top:calc(124vw + 4px)}}
@@ -261,7 +261,7 @@ dialog .meta{font-size:13px;color:var(--mute);display:flex;gap:12px;flex-wrap:wr
 .cur2.big{width:64px;height:64px;background:rgba(229,72,90,.1)}
 @media (hover:hover) and (pointer:fine){.cur,.cur2{display:block}}
 button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:3px}
-@media (max-width:699px){.hero{align-items:start}.hero-in{padding-top:calc(124vw + 30px)}}
+@media (max-width:699px){.hero{align-items:start}.hero-in{padding-top:calc(124vw + 52px);padding-bottom:40px}}
 @media (max-width:640px){
   .step{grid-template-columns:48px 1fr;padding:18px}.step .n{grid-column:2}.step .bar{grid-column:1/3}
   .lvl{grid-template-columns:auto 1fr}.lvl .n{grid-column:2}
@@ -298,17 +298,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 @media (max-width:600px){.wall{columns:1}}
 
 /* Полоса пути к миллиону историй */
-.goal{margin-top:26px;max-width:none!important;width:min(100%,1100px)}
+.goal-band{background:var(--tg);color:#FFF7F0;padding-block:30px 44px;border-top:1px solid rgba(255,247,240,.14)}
+@media (min-width:700px){.goal-band .wrap{margin:0;max-width:none;padding-left:max(28px,6vw);padding-right:max(28px,6vw)}}
+.goal{width:100%}
 .goal-bar{position:relative;height:18px;border-radius:99px;background:rgba(255,247,240,.16);border:1px solid rgba(255,247,240,.28);overflow:visible}
 .goal-fill{position:absolute;left:0;top:0;bottom:0;width:0;min-width:10px;border-radius:99px;background:linear-gradient(90deg,#FFE680,#FFD21F 60%,#FFB000);box-shadow:0 0 18px 2px rgba(255,210,31,.75);transition:width 2.4s cubic-bezier(.2,.7,.2,1)}
 .goal-dot{position:absolute;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#FFD21F;border:3px solid #FFF7F0;box-shadow:0 0 0 6px rgba(255,210,31,.28),0 0 26px rgba(255,210,31,.9);animation:goalpulse 1.8s ease-in-out infinite;transition:left 2.4s cubic-bezier(.2,.7,.2,1)}
 @keyframes goalpulse{50%{box-shadow:0 0 0 12px rgba(255,210,31,0),0 0 34px rgba(255,210,31,1)}}
-.goal-ticks{position:relative;height:14px;margin-top:6px}
-.goal-ticks span{position:absolute;top:0;transform:translateX(-50%);font:600 11px/1 var(--text);color:rgba(255,247,240,.6);letter-spacing:.04em;white-space:nowrap}
+.goal-ticks{position:relative;height:16px;margin-top:10px}
+.goal-ticks span{position:absolute;top:0;transform:translateX(-50%);font:600 12px/1 var(--text);color:rgba(255,247,240,.62);letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
 .goal-ticks span:first-child{transform:none}.goal-ticks span:last-child{transform:translateX(-100%)}
-.goal-cap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:14px;font:600 14px/1.35 var(--text);color:rgba(255,247,240,.85)}
+.goal-cap{display:flex;justify-content:space-between;align-items:baseline;gap:10px 24px;flex-wrap:wrap;margin-top:20px;font:500 16px/1.4 var(--text);color:rgba(255,247,240,.88)}
 @media (max-width:699px){.goal-ticks span:nth-child(2),.goal-ticks span:nth-child(4){display:none}}
-.goal-cap b{color:var(--y);font-family:var(--display);font-weight:900}
+.goal-cap b{color:var(--y);font:800 17px/1 var(--display);letter-spacing:-.01em;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){.goal-fill,.goal-dot{transition:none;animation:none}}
 </style>
 </head>
@@ -365,15 +367,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
       <div class="big-count"><span data-count="1961">0</span><small>историй из 1 000 000</small></div>
       <div class="hint">Нажми на фото — откроется история</div>
     </div>
-    <div class="goal" id="goal" aria-label="Путь к миллиону счастливых историй">
+  </div>
+</header>
+<section class="goal-band" aria-label="Путь к миллиону счастливых историй"><div class="wrap">
+    <div class="goal" id="goal">
       <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div><div class="goal-dot" id="goal-dot" style="left:0"></div></div>
       <div class="goal-ticks"><span style="left:0">0</span><span style="left:25%">250 000</span><span style="left:50%">500 000</span><span style="left:75%">750 000</span><span style="left:100%">1 000 000</span></div>
       <div class="goal-cap"><span>Мы прошли <b id="goal-pct">0,2%</b> пути — и это уже достижение</span><span>Цель — <b>1 000 000</b> счастливых историй</span></div>
     </div>
-  </div>
-</header>
+</div></section>
 
-<section id="cases-s" style="padding-top:0"><div class="wrap">
+<section id="cases-s"><div class="wrap">
   <div class="eyebrow rv">Растём вместе</div>
   <h2 class="rv">кейсы <em>клуба</em></h2>
   <p class="lead rv">Аккаунты участников по числу подписчиков. Нажми — откроются их истории.</p>
