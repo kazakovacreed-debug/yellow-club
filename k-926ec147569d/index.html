@@ -356,7 +356,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 </div></section>
 
 <header class="hero" id="top">
-  <canvas id="cloud" aria-label="Облако кейсов клуба: каждая сфера — история участника или капитан"></canvas>
+  <canvas id="cloud" aria-label="Сфера из аватарок: Айрат, Евгений, капитаны и участники клуба с результатом"></canvas>
   <div class="tip" id="tip"></div>
   <div class="spin-hint">крути сферу</div>
   <div class="wrap hero-in">
@@ -434,24 +434,29 @@ const initials = (s) => (s || '').replace(/[^А-ЯЁA-Zа-яёa-z\s]/g, '').trim
 
 /* ---------- Облако сфер ---------- */
 const cv = $('#cloud'), ctx = cv.getContext('2d'), tip = $('#tip');
-// Шар из круглых фото: сначала люди с фото, потом кейсы с фото, потом кейсы-сферы с цифрой
-const TOTAL = 90; // меньше сфер — крупнее фото
-const withPhoto = [...D.people.filter((p) => p.photo).map((p) => ({ kind: 'person', ...p })),
-  ...D.cases.filter((c) => c.photo).map((c) => ({ kind: 'case', c }))];
-const rest = [...D.cases.filter((c) => !c.photo && c.badge), ...D.cases.filter((c) => !c.photo && !c.badge && c.name)]
-  .slice(0, Math.max(0, TOTAL - withPhoto.length)).map((c) => ({ kind: 'case', c }));
-const pick = [...withPhoto.slice(0, TOTAL), ...rest];
-// перемешать, чтобы фото людей были по всему шару (детерминированно)
+// Шар только из аватарок: Айрат и Евгений, капитаны и наставники, участники с самыми большими аккаунтами
+const LEADERS = [
+  { kind: 'person', star: true, name: 'Айрат Шакуров', role: 'основатель Жёлтого клуба', tg: 'airatshakurov' },
+  { kind: 'person', star: true, name: 'Евгений', role: 'продюсер Жёлтого клуба', tg: 'evgenius_business' },
+];
+const capts = D.people.filter((p) => p.photo).map((p) => ({ kind: 'person', ...p }));
+const accs = D.accounts.filter((a) => a.photo && !a.gone).sort((a, b) => (b.followers || 0) - (a.followers || 0))
+  .slice(0, 240).map((a) => ({ kind: 'acc', a }));
+const pick = [...capts, ...accs];
+// перемешать, чтобы капитаны и участники были по всему шару (детерминированно)
 for (let i = pick.length - 1, seed = 7; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor((seed / 233280) * (i + 1)); [pick[i], pick[j]] = [pick[j], pick[i]]; }
+// Айрат и Евгений — по разные стороны шара, чтобы один из них всегда был спереди
+pick.splice(Math.floor(pick.length * 0.3), 0, LEADERS[0]);
+pick.splice(Math.floor(pick.length * 0.72), 0, LEADERS[1]);
 const N = pick.length;
 const GAP = Math.sqrt((4 * Math.PI) / N); // угол между соседними точками — по нему размер, чтобы фото лежали вплотную
 const orbs = pick.map((o, i) => {   // равномерно по сфере (спираль Фибоначчи)
   const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = Math.PI * (3 - Math.sqrt(5)) * i;
   const orb = { ...o, x: Math.cos(th) * r, y, z: Math.sin(th) * r, img: new Image() };
-  // у людей сначала пробуем чёткую аватарку из Telegram, если не загрузилась — локальное фото
-  const sources = o.kind === 'person' ? [o.tg && `https://t.me/i/userpic/320/${o.tg}.jpg`, o.photo].filter(Boolean) : [o.c.photo].filter(Boolean);
+  // у людей сначала чёткая аватарка из Telegram, если не загрузилась — локальное фото
+  const sources = o.kind === 'person' ? [o.tg && `https://t.me/i/userpic/320/${o.tg}.jpg`, o.photo].filter(Boolean) : [o.a.photo];
   let k = 0;
-  const next = () => { if (k < sources.length) orb.img.src = sources[k++]; };
+  const next = () => { if (k < sources.length) orb.img.src = sources[k++]; else orb.fail = true; };
   // аватарка Telegram без фото приходит крошечной заглушкой — такие пропускаем
   orb.img.onload = () => { if (orb.img.naturalWidth >= 50) orb.ready = true; else next(); };
   orb.img.onerror = next; next();
@@ -461,7 +466,7 @@ let W = 0, H = 0, dpr = 1, R = 300, rotX = -0.2, rotY = 0, vx = 0, vy = 0.0022, 
 function resize() {
   dpr = Math.min(window.devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight;
   cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  R = W < 700 ? W * 0.56 : Math.min(W * 0.28, H * 0.48);
+  R = W < 700 ? W * 0.58 : Math.min(W * 0.3, H * 0.5);
 }
 function project() {
   const cx = W < 700 ? W / 2 : W * 0.72, cy = W < 700 ? W * 0.62 : H * 0.47;
@@ -471,7 +476,7 @@ function project() {
     const y1 = o.y * cX - z1 * sX, z2 = o.y * sX + z1 * cX;
     const f = 1.5 / (2.5 - z2);                       // перспектива: ближе — крупнее
     o.sx = cx + x1 * R * f; o.sy = cy + y1 * R * f; o.depth = z2;
-    o.r = R * GAP * (o.kind === 'person' ? 0.45 : 0.3) * f;   // 0.4 — между фото остаётся воздух
+    o.r = R * GAP * (o.star ? 1.15 : o.kind === 'person' ? 0.6 : 0.5) * f;   // Айрат и Евгений крупнее, капитаны чуть крупнее участников
   }
   orbs.sort((a, b) => a.depth - b.depth);             // дальние рисуем первыми
 }
@@ -486,6 +491,7 @@ function draw(t) {
     const isH = o === hover;
     const r = o.r * (isH ? 1 + 0.18 * hoverK : 1);
     const back = (1 - (o.depth + 1) / 2);               // 0 спереди … 1 сзади
+    if (!o.ready && !o.star) continue;               // пока фото не загрузилось — не рисуем
     ctx.save(); ctx.beginPath(); ctx.arc(o.sx, o.sy, r, 0, 7); ctx.clip();
     if (o.ready) drawPhoto(o, r);
     else {
@@ -493,7 +499,7 @@ function draw(t) {
       g.addColorStop(0, '#FFF6C8'); g.addColorStop(0.35, '#FFD21F'); g.addColorStop(0.75, '#FFB000'); g.addColorStop(1, '#9A5A00');
       ctx.fillStyle = g; ctx.fillRect(o.sx - r, o.sy - r, r * 2, r * 2);
       if (r > 11) {
-        const label = o.kind === 'case' ? (o.c.badge || initials(o.c.name)) : initials(o.name);
+        const label = initials(o.name);
         ctx.fillStyle = '#1a1200'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.font = `900 ${Math.max(7, Math.min(r * 0.5, r * 2.1 / Math.max(3, label.length)))}px Unbounded, sans-serif`;
         ctx.fillText(label, o.sx, o.sy + 1);
@@ -505,19 +511,20 @@ function draw(t) {
     ctx.fillStyle = gl; ctx.fillRect(o.sx - r, o.sy - r, r * 2, r * 2);
     if (back > 0.05) { ctx.fillStyle = `rgba(80,10,44,${(back * 0.7).toFixed(3)})`; ctx.fillRect(o.sx - r, o.sy - r, r * 2, r * 2); }
     ctx.restore();
-    ctx.lineWidth = isH ? 3.5 : 2; ctx.strokeStyle = isH ? '#FFD21F' : 'rgba(255,255,255,.55)';
+    ctx.lineWidth = isH ? 3.5 : o.star ? 4 : o.kind === 'person' ? 2.5 : 1.5;
+    ctx.strokeStyle = isH || o.star ? '#FFD21F' : o.kind === 'person' ? 'rgba(255,230,128,.9)' : 'rgba(255,255,255,.55)';
     if (isH) { ctx.shadowColor = 'rgba(255,210,31,.8)'; ctx.shadowBlur = 18; }
     ctx.beginPath(); ctx.arc(o.sx, o.sy, r, 0, 7); ctx.stroke(); ctx.shadowBlur = 0;
   }
 }
 function hitTest() {
   let best = null;
-  for (let i = orbs.length - 1; i >= 0; i--) { const o = orbs[i]; if (o.depth > -0.2 && Math.hypot(mouse.x - o.sx, mouse.y - o.sy) < o.r) { best = o; break; } }
+  for (let i = orbs.length - 1; i >= 0; i--) { const o = orbs[i]; if (o.depth > -0.2 && (o.ready || o.star) && Math.hypot(mouse.x - o.sx, mouse.y - o.sy) < o.r) { best = o; break; } }
   if (best !== hover) {
     hover = best; document.querySelector('.cur2').classList.toggle('big', !!best);
     if (best) {
-      const name = best.kind === 'person' ? best.name : (best.c.name || best.c.author || best.c.badge || STAGE[best.c.stage]?.label || '');
-      const action = best.kind === 'person' && best.tg ? 'Написать' : 'Открыть историю';
+      const name = best.kind === 'person' ? best.name + (best.star ? ' · ' + best.role : '') : '@' + best.a.handle;
+      const action = best.kind === 'person' ? (best.star ? 'Жёлтый клуб' : best.role === 'наставник' ? 'Наставник' : 'Капитан') : (best.a.name || 'Участник клуба');
       tip.innerHTML = `<b>${esc(action)}</b>${name ? `<span>${esc(name)}</span>` : ''}`;
     }
     tip.classList.toggle('on', !!best);
@@ -547,10 +554,10 @@ addEventListener('resize', resize); resize();
 if (reduce) { project(); draw(0); setInterval(() => { project(); hitTest(); draw(0); }, 200); } else requestAnimationFrame(loop);
 
 function openOrb(o) {
-  if (o.kind === 'case') return openCase(o.c);
+  if (o.kind === 'acc') return openAcc(ACC.find((x) => x.handle === o.a.handle) || { ...o.a, cs: [] });
   const list = D.cases.filter((c) => c.captain === o.name);
   $('#dlg-body').innerHTML = `<div class="eyebrow">${esc(o.role)}</div><h3>${esc(o.name)}</h3>${o.tg ? `<p><a class="btn" style="display:inline-block;text-decoration:none" href="https://t.me/${esc(o.tg)}" target="_blank" rel="noopener">Написать в Telegram</a></p>` : ''}<p>Команда «${esc(o.team)}».
-${list.length ? `Кейсов команды в базе: ${list.length}.` : 'Кейсы этой команды появятся после выгрузки капитанского чата.'}</p>
+${o.star ? 'Вместе с капитанами ведёт клуб к миллиону счастливых людей.' : list.length ? `Кейсов команды в базе: ${list.length}.` : 'Кейсы этой команды появятся после выгрузки капитанского чата.'}</p>
   ${list.slice(0, 6).map((c) => `<div class="tag st" style="display:inline-block;margin:3px">${esc(c.badge || c.title.slice(0, 40))}</div>`).join('')}`;
   $('#dlg').showModal();
 }
